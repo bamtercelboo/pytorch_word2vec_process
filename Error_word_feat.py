@@ -61,15 +61,17 @@ def cal_error(sample_number, sample_k, word_vec, feat_vec):
         # print(sample_word_list)
         # sample_word_list_tqdm = tqdm.tqdm(sample_word_list)
         Euclidean = []
+        b = []
         for sample_word in sample_word_list:
             # print(sample_word)
             # sample_word_list_tqdm.set_description("Processing......")
             vec_word = handle_word(sample_word, word_vec)
             vec_feat, feat_num = handle_feat(sample_word, feat_vec)
             euc = (vec_word - vec_feat) ** 2
-            print(euc)
             Euclidean.append(euc.tolist())
-            a = np.sum(Euclidean)
+            b.append(np.sum(euc.tolist()))
+        # a = np.sum(Euclidean)
+        # c = np.sum(b)
         euclidean_avg.append(np.sum(Euclidean))
             # # print(euc)
             # Euclidean.append(np.sum(euc.tolist()))
