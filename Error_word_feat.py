@@ -1,7 +1,11 @@
 # coding=utf-8
 
 import random
+import os
 import numpy as np
+import math
+import tqdm
+import multiprocessing as mu
 
 
 def read_word_feat(path_word_vector, path_feat_vector):
@@ -35,7 +39,7 @@ def handle_feat(word, feat_vec):
         for i in range(0, len(word) - feat_num + 1):
             feat = "S@" + str(feat_num) + "#" + word[i:(i + feat_num)]
             if feat.strip() in feat_vec:
-                print(feat.strip(), feat_vec[feat.strip()])
+                # print(feat.strip(), feat_vec[feat.strip()])
                 feat_count += 1
                 list_float = [float(i) for i in feat_vec[feat.strip()]]
                 vector = np.array(vector) + np.array(list_float)
@@ -50,27 +54,49 @@ def handle_feat(word, feat_vec):
 def cal_error(sample_number, sample_k, word_vec, feat_vec):
     print("calculate error......")
     euclidean_avg = []
-    for sample_num in range(sample_number):
+    sample_number_tqdm = tqdm.trange(sample_number)
+    for sample_num in sample_number_tqdm:
+        sample_number_tqdm.set_description("Process:" + str(sample_k))
         sample_word_list = random.sample(word_list, sample_k)
-        print(sample_word_list)
+        # print(sample_word_list)
+        # sample_word_list_tqdm = tqdm.tqdm(sample_word_list)
         Euclidean = []
         for sample_word in sample_word_list:
-            print(sample_word)
+            # print(sample_word)
+            # sample_word_list_tqdm.set_description("Processing......")
             vec_word = handle_word(sample_word, word_vec)
             vec_feat, feat_num = handle_feat(sample_word, feat_vec)
             euc = (vec_word - vec_feat) ** 2
+            print(euc)
             Euclidean.append(euc.tolist())
+            a = np.sum(Euclidean)
         euclidean_avg.append(np.sum(Euclidean))
+            # # print(euc)
+            # Euclidean.append(np.sum(euc.tolist()))
+        # euclidean_avg.append(Euclidean)
     error_avg = np.sum(euclidean_avg) / len(euclidean_avg)
     return error_avg
 
 
 if __name__ == "__main__":
-    # path_word_vector = "./glove.6B.100d.txt"
-    # path_feat_vector = "./eng.feat.model.small"
-    path_word_vector = "/home/lzl/mszhang/subword/subword/eng.word.model"
-    path_feat_vector = "/home/lzl/mszhang/subword/subword/eng.feat.model"
+    path_word_vector = "./glove.6B.100d.txt"
+    path_feat_vector = "./eng.feat.model.small"
+    # path_word_vector = "/home/lzl/mszhang/subword/subword/eng.word.model"
+    # path_feat_vector = "/home/lzl/mszhang/subword/subword/eng.feat.model"
+    path_result = "./result_subword.txt"
     word_list, word_vec, feat_vec = read_word_feat(path_word_vector=path_word_vector, path_feat_vector=path_feat_vector)
-    error_avg = cal_error(3, 10, word_vec, feat_vec)
-    print("The result is {}".format(error_avg.round(6)))
+
+    if os.path.exists(path_result):
+        os.remove(path_result)
+
+    list_sample_k = [100, 500, 1000, 5000, 10000]
+    list_sample_k_tqdm = tqdm.tqdm(list_sample_k)
+    file = open(path_result, mode="w", buffering=1)
+    file.writelines(["sample_number", " ", "sample_k", " ", "error_avg", "\n"])
+    for sample_k in list_sample_k_tqdm:
+        list_sample_k_tqdm.set_description("Processing:")
+        error_avg = cal_error(1000, int(sample_k), word_vec, feat_vec)
+        file.writelines([str(1000), "    ", str(sample_k), "     ", str(error_avg.round(6)), "\n"])
+        print("The result is {}, {}, {}".format(1000, sample_k, error_avg.round(6)))
+    file.close()
 
