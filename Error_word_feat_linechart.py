@@ -27,7 +27,7 @@ def line_chart(subword, subwordp, list_sample_k):
     plt.ylabel("error_avg  (e5)")
     plt.title("subword compare to subwordp")
     # plt.p
-    # plt.legend()
+    plt.legend()
     plt.show()
     ax.savefig("./Error.jpg")
 
