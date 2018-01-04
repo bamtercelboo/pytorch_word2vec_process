@@ -101,4 +101,6 @@ if __name__ == "__main__":
         file.writelines([str(1000), "    ", str(sample_k), "     ", str(error_avg.round(6)), "\n"])
         print("The result is {}, {}, {}".format(1000, sample_k, error_avg.round(6)))
     file.close()
+    
+
 
