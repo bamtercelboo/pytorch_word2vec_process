@@ -1,12 +1,11 @@
 # @Author : bamtercelboo
-# @Datetime : 2018/1/9 18:22
-# @File : filterVocab_richfeat_feat_3.py
-# @Last Modify Time : 2018/1/9 18:22
+# @Datetime : 2018/1/11 14:16
+# @File : filterVocab_suda_richfeat_source_feat.py
+# @Last Modify Time : 2018/1/11 14:16
 # @Contact : bamtercelboo@{gmail.com, 163.com}
 
 import os
 import sys
-import gc
 import numpy as np
 
 
@@ -99,6 +98,20 @@ def read_feat(path_feat_vector=None, release_mem=False):
     return vec
 
 
+def read_source(path_source_vector=None):
+    source = {}
+    print("reading source vector from file......")
+    now_line = 0
+    with open(path_source_vector, encoding="UTF-8") as file:
+        for line in file:
+            now_line += 1
+            sys.stdout.write("\rHandling with the {} line.".format(now_line))
+            source[line.strip().split(" ")[0]] = line.strip().split(" ")[1:]
+        print("\nFinished")
+    file.close()
+    return source
+
+
 def read_data(path_data_stastic=None):
     word_list = []
     word_dict = {}
@@ -118,7 +131,7 @@ def read_data(path_data_stastic=None):
     return word_dict
 
 
-def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
+def handle_feat(d=None, vec=None, word_dict=None, source=None, path_filtedVectors=None):
     # print(vec)
     if os.path.exists(path_filtedVectors):
         os.remove(path_filtedVectors)
@@ -127,6 +140,14 @@ def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
 
     for index, word in enumerate(d):
         sys.stdout.write("\rHandling with the {} word in d.".format(index + 1))
+
+        source_vector = 0
+        source_count = 0
+        if word[1:len(word) - 1] in source:
+            source_count += 1
+            list_source = [float(i) for i in source[word[1:len(word)-1]]]
+            source_vector = np.array(list_source) + np.array(source_vector)
+
         vector = 0
         feat_count = 0
         feat_contains = False
@@ -160,9 +181,10 @@ def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
                     # print("count_win", count_win)
                     window_vector = np.array(window_vector) + int(count_win) * np.array(list_float)
                     # print(window_vector)
-            window_vector = window_vector / (count_word * feat_num + F_num)
+            window_vector = window_vector / (count_word * (feat_num + 1) + F_num)
+            # window_vector = (window_vector + source_vector) / (count_word * feat_num + F_num)
         if feat_contains is True:
-            vector = vector / (feat_num + F_num / count_word)
+            vector = vector / ((feat_num + 1) + (F_num / count_word))
         # print("window_vector", window_vector)
         # print("vector", vector)
         vec_all = window_vector + vector
@@ -182,53 +204,29 @@ def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
 
 if __name__ == "__main__":
 
-    # path_feat_vector = "./enwiki.emb.feature.small"
-    path_fullVocab = "./fullVocab.txt"
-    path_filtedVectors = "./suda_richfeat_filtedVectors_feat.txt"
-    windows_size = 5
-    #
-    # path_data = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text.txt"
-    # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/richfeat/enwiki.emb.feature"
-    # path_fullVocab = "./fullVocab.txt"
-    # path_filtedVectors = "./suda_richfeat/suda_richfeat_filtedVectors_feat.txt"
-    # windows_size = 5
-
     # copy with the fullvocab
+    path_fullVocab = "./fullVocab.txt"
     d = {}
     for line in open(path_fullVocab, 'r'):
         d["<" + line.strip() + ">"] = 0
-
-    # copy with the corpus
-    print("Handling data step one......")
-    # path_data = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text.txt"
-    path_data = "./enwiki-20150112_text_small_50.txt"
-    # save_step1_path = "./enwiki-20150112_text_small.handled.txt"
-    # handle_data_step1(path=path_data, save_path=save_step1_path, windows_size=windows_size, d=d)
-    print("Handle data step one Finished")
-
-    print("Handling data two one......")
-    path_handled = "./enwiki-20150112_text_small.handled.2.txt"
-    # handle_data_step2()
-    print("Handle data step two Finished")
-
-    # path_handled = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled.txt"
-    # path_write = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
-    path_handled = "./enwiki-20150112_text_small.handled.2.sorted.txt"
-    path_write = "./suda_data.txt"
-    # handle_data_step3(path=path_handled, path_write=path_write)
 
     # copy with the feature vector
     # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/richfeat/enwiki.emb.feature"
     path_feat_vector = "./enwiki.emb.feature.small"
     vec = read_feat(path_feat_vector=path_feat_vector, release_mem=True)
-    # handle feature
+
+    # path_source_vector = "./enwiki.emb.source_small"
+    path_source_vector = "./enwiki.emb.source_small"
+    source = read_source(path_source_vector=path_source_vector)
 
     path_data_stastic = "./enwiki-20150112_text_handled_stastic_small.txt"
     # path_data_stastic = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
     print("reading data......")
     word_dict = read_data(path_data_stastic=path_data_stastic)
+
     print("Handling feature......")
-    handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
+    path_filtedVectors = "./suda_richfeat_filtedVectors_source_feat.txt"
+    handle_feat(d=d, vec=vec, word_dict=word_dict, source=source, path_filtedVectors=path_filtedVectors)
     print("\nHandle Finished")
 
 
