@@ -118,6 +118,54 @@ def read_data(path_data_stastic=None):
     return word_dict
 
 
+def handle_feat_to_small(d=None, vec=None, path_feat=None, save_small_feat_path=None):
+    if os.path.exists(save_small_feat_path):
+        os.remove(save_small_feat_path)
+
+    file = open(save_small_feat_path, "w")
+
+    for index, word in enumerate(d):
+        sys.stdout.write("\rHandling with the {} word in d.".format(index + 1))
+        for feat_num in range(3, 7):
+            for i in range(0, len(word) - feat_num + 1):
+                feat = word[i:(i + feat_num)]
+                with open(path_feat, encoding="UTF-8") as f:
+                    for line in f:
+                        if feat == line.strip().split(" ")[0]:
+                            file.writelines(line)
+                            break
+    f.close()
+    file.close()
+
+
+def handle_feat_to_small_speed(d=None, vec=None, path_feat=None, save_small_feat_path=None):
+    if os.path.exists(save_small_feat_path):
+        os.remove(save_small_feat_path)
+
+    file = open(save_small_feat_path, "w", encoding="UTF-8")
+
+    for index, word in enumerate(d):
+        sys.stdout.write("\rHandling with the {} word in d.".format(index + 1))
+        for feat_num in range(3, 7):
+            for i in range(0, len(word) - feat_num + 1):
+                feat = word[i:(i + feat_num)]
+                if feat.strip() in vec:
+                    file.write(str(feat))
+                    for str_vec in vec[feat.strip()]:
+                        file.write(" " + str_vec)
+                    file.write("\n")
+    now_line = 0
+    for f_feat in vec:
+        now_line += 1
+        sys.stdout.write("\rHandling with the {} line in vec.".format(now_line))
+        if f_feat[0] == "F":
+            file.write(str(f_feat))
+            for str_vec in vec[f_feat.strip()]:
+                file.write(" " + str_vec)
+            file.write("\n")
+    file.close()
+
+
 def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
     # print(vec)
     if os.path.exists(path_filtedVectors):
@@ -154,8 +202,10 @@ def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
             for word_win_feat in word_dict[word[1: len(word) - 1]]:
                 # print(word_win_feat)
                 if word_win_feat in vec:
-                    list_float = [float(i) for i in vec[word_win_feat.strip()]]
                     count_win = word_dict[word[1: len(word) - 1]][word_win_feat]
+                    if count_win < 50:
+                        continue
+                    list_float = [float(i) for i in vec[word_win_feat.strip()]]
                     F_num += count_win
                     # print("count_win", count_win)
                     window_vector = np.array(window_vector) + int(count_win) * np.array(list_float)
@@ -219,16 +269,25 @@ if __name__ == "__main__":
 
     # copy with the feature vector
     # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/richfeat/enwiki.emb.feature"
+    # path_feat_vector = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature"
     path_feat_vector = "./enwiki.emb.feature.small"
     vec = read_feat(path_feat_vector=path_feat_vector, release_mem=True)
     # handle feature
 
-    path_data_stastic = "./enwiki-20150112_text_handled_stastic_small.txt"
+    path_feat_vector = "./enwiki.emb.feature.small"
+    save_small_feat_path = "./suda_rich.txt"
+    # path_feat_vector = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature"
+    # save_small_feat_path = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature_handled.txt"
+    # handle_feat_to_small(d=d, path_feat=path_feat_vector, save_small_feat_path=save_small_feat_path)
+    handle_feat_to_small_speed(d=d, vec=vec, path_feat=path_feat_vector, save_small_feat_path=save_small_feat_path)
+
+    # path_data_stastic = "./enwiki-20150112_text_handled_stastic_small.txt"
+    path_data_stastic = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic.txt"
     # path_data_stastic = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
     print("reading data......")
-    word_dict = read_data(path_data_stastic=path_data_stastic)
+    # word_dict = read_data(path_data_stastic=path_data_stastic)
     print("Handling feature......")
-    handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
+    # handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
     print("\nHandle Finished")
 
 
