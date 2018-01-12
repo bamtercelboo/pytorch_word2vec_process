@@ -104,19 +104,24 @@ def read_feat(path_feat_vector=None, release_mem=False):
     return vec
 
 
-def read_data(path_data_stastic=None, freq=1):
+def read_data(path_data_stastic=None, freq=1, highfreq=1):
     word_list = []
     word_dict = {}
     with open(path_data_stastic, encoding="UTF-8") as f:
         now_line = 0
-        for line in f.readlines():
+        for line in f:
             now_line += 1
             sys.stdout.write("\rHandling with the {} line".format(now_line))
             line = line.strip().split(" ")
             window_dict = {}
             for i in range(0, len(line) - 2, 2):
-                if int(line[i + 3]) >= freq:
-                    window_dict[line[i + 2]] = int(line[i + 3])
+                # if i > highfreq:
+                #     break
+                if i > (((len(line) - 2) / 2) * 0.2):
+                    break
+                window_dict[line[i + 2]] = int(line[i + 3])
+                # if int(line[i + 3]) >= freq:
+                #     window_dict[line[i + 2]] = int(line[i + 3])
             window_dict["count"] = int(line[1])
             word_dict[line[0]] = window_dict
         f.close()
@@ -287,12 +292,13 @@ if __name__ == "__main__":
     # handle_feat_to_small_speed(d=d, vec=vec, path_feat=path_feat_vector, save_small_feat_path=save_small_feat_path)
 
     # path_data_stastic = "./enwiki-20150112_text_handled_stastic_small.txt"
-    path_data_stastic = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic.txt"
+    # path_data_stastic = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic.txt"
+    path_data_stastic_sorted = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic_sorted.txt"
     # path_data_stastic = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
     print("reading data......")
-    word_dict = read_data(path_data_stastic=path_data_stastic, freq=50)
+    word_dict = read_data(path_data_stastic=path_data_stastic_sorted, freq=50, highfreq=200)
     print("Handling feature......")
-    path_filtedVectors = "./suda_richfeat_filtedVectors_feat.txt"
+    path_filtedVectors = "./suda_richfeat_filtedVectors_feat_highfreq20%.txt"
     handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
     print("\nHandle Finished")
 
