@@ -55,13 +55,18 @@ def handle_data_step3(path=None, path_write=None):
             # print(line_list)
             word = line_list[0]
             if word not in word_dict:
+                # window_dict = {}
                 window_dict = {}
                 for win_word in line_list[1:]:
-                    window_dict[win_word] = 1
-                window_dict["count"] = 1
+                    if win_word not in window_dict:
+                        window_dict[win_word] = int(1)
+                    else:
+                        window_dict[win_word] += 1
+                window_dict["count"] = int(1)
+                # window_dict = dict(sorted(window_dict.items(), key=lambda t: t[1], reverse=True))
                 word_dict[word] = window_dict
             else:
-                word_dict[word]["count"] += 1
+                word_dict[word]["count"] += int(1)
                 for win_word in line_list[1:]:
                     if win_word in word_dict[word]:
                         word_dict[word][win_word] += 1
@@ -76,12 +81,12 @@ def handle_data_step3(path=None, path_write=None):
     for word in word_dict:
         now_word += 1
         sys.stdout.write("\rwriting {} word, all {} words.".format(now_word, len_word_dict))
+        word_dict[word] = dict(sorted(word_dict[word].items(), key=lambda t: t[1], reverse=True))
         file.write(word + " " + str(word_dict[word]["count"]))
         for word_value in word_dict[word]:
             file.write(" " + word_value + " " + str(word_dict[word][word_value]))
         file.write("\n")
     file.close()
-    # return word_dict
 
 
 def read_feat(path_feat_vector=None, release_mem=False):
@@ -99,7 +104,7 @@ def read_feat(path_feat_vector=None, release_mem=False):
     return vec
 
 
-def read_data(path_data_stastic=None):
+def read_data(path_data_stastic=None, freq=1):
     word_list = []
     word_dict = {}
     with open(path_data_stastic, encoding="UTF-8") as f:
@@ -110,7 +115,8 @@ def read_data(path_data_stastic=None):
             line = line.strip().split(" ")
             window_dict = {}
             for i in range(0, len(line) - 2, 2):
-                window_dict[line[i + 2]] = int(line[i + 3])
+                if int(line[i + 3]) >= freq:
+                    window_dict[line[i + 2]] = int(line[i + 3])
             window_dict["count"] = int(line[1])
             word_dict[line[0]] = window_dict
         f.close()
@@ -203,8 +209,8 @@ def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
                 # print(word_win_feat)
                 if word_win_feat in vec:
                     count_win = word_dict[word[1: len(word) - 1]][word_win_feat]
-                    if count_win < 50:
-                        continue
+                    # if count_win < 50:
+                    #     continue
                     list_float = [float(i) for i in vec[word_win_feat.strip()]]
                     F_num += count_win
                     # print("count_win", count_win)
@@ -233,9 +239,7 @@ def handle_feat(d=None, vec=None, word_dict=None, path_filtedVectors=None):
 if __name__ == "__main__":
 
     # path_feat_vector = "./enwiki.emb.feature.small"
-    path_fullVocab = "./fullVocab.txt"
-    path_filtedVectors = "./suda_richfeat_filtedVectors_feat.txt"
-    windows_size = 5
+    # windows_size = 5
     #
     # path_data = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text.txt"
     # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/richfeat/enwiki.emb.feature"
@@ -244,50 +248,52 @@ if __name__ == "__main__":
     # windows_size = 5
 
     # copy with the fullvocab
+    path_fullVocab = "./fullVocab.txt"
     d = {}
     for line in open(path_fullVocab, 'r'):
         d["<" + line.strip() + ">"] = 0
 
     # copy with the corpus
-    print("Handling data step one......")
+    # print("Handling data step one......")
     # path_data = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text.txt"
-    path_data = "./enwiki-20150112_text_small_50.txt"
+    # path_data = "./enwiki-20150112_text_small_50.txt"
     # save_step1_path = "./enwiki-20150112_text_small.handled.txt"
     # handle_data_step1(path=path_data, save_path=save_step1_path, windows_size=windows_size, d=d)
-    print("Handle data step one Finished")
+    # print("Handle data step one Finished")
 
-    print("Handling data two one......")
-    path_handled = "./enwiki-20150112_text_small.handled.2.txt"
+    # print("Handling data two one......")
+    # path_handled = "./enwiki-20150112_text_small.handled.2.txt"
     # handle_data_step2()
-    print("Handle data step two Finished")
+    # print("Handle data step two Finished")
 
     # path_handled = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled.txt"
     # path_write = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
-    path_handled = "./enwiki-20150112_text_small.handled.2.sorted.txt"
-    path_write = "./suda_data.txt"
+    # path_handled = "./enwiki-20150112_text_small.handled.2.sorted.txt"
+    # path_write = "./suda_data.txt"
     # handle_data_step3(path=path_handled, path_write=path_write)
 
     # copy with the feature vector
     # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/richfeat/enwiki.emb.feature"
-    # path_feat_vector = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature"
-    path_feat_vector = "./enwiki.emb.feature.small"
+    path_feat_vector = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature_handled.txt"
+    # path_feat_vector = "./enwiki.emb.feature.small"
     vec = read_feat(path_feat_vector=path_feat_vector, release_mem=True)
     # handle feature
 
-    path_feat_vector = "./enwiki.emb.feature.small"
-    save_small_feat_path = "./suda_rich.txt"
+    # path_feat_vector = "./enwiki.emb.feature.small"
+    # save_small_feat_path = "./suda_rich.txt"
     # path_feat_vector = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature"
     # save_small_feat_path = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature_handled.txt"
     # handle_feat_to_small(d=d, path_feat=path_feat_vector, save_small_feat_path=save_small_feat_path)
-    handle_feat_to_small_speed(d=d, vec=vec, path_feat=path_feat_vector, save_small_feat_path=save_small_feat_path)
+    # handle_feat_to_small_speed(d=d, vec=vec, path_feat=path_feat_vector, save_small_feat_path=save_small_feat_path)
 
     # path_data_stastic = "./enwiki-20150112_text_handled_stastic_small.txt"
     path_data_stastic = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic.txt"
     # path_data_stastic = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
     print("reading data......")
-    # word_dict = read_data(path_data_stastic=path_data_stastic)
+    word_dict = read_data(path_data_stastic=path_data_stastic, freq=50)
     print("Handling feature......")
-    # handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
+    path_filtedVectors = "./suda_richfeat_filtedVectors_feat.txt"
+    handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
     print("\nHandle Finished")
 
 
