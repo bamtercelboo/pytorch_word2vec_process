@@ -117,8 +117,8 @@ def read_data(path_data_stastic=None, freq=1, highfreq=1):
             for i in range(0, len(line) - 2, 2):
                 # if i > highfreq:
                 #     break
-                if i > (((len(line) - 2) / 2) * 0.2):
-                    break
+                # if i > (((len(line) - 2) / 2) * 0.2):
+                #     break
                 window_dict[line[i + 2]] = int(line[i + 3])
                 # if int(line[i + 3]) >= freq:
                 #     window_dict[line[i + 2]] = int(line[i + 3])
@@ -165,6 +165,7 @@ def handle_feat_to_small_speed(d=None, vec=None, path_feat=None, save_small_feat
                     for str_vec in vec[feat.strip()]:
                         file.write(" " + str_vec)
                     file.write("\n")
+    print("\n")
     now_line = 0
     for f_feat in vec:
         now_line += 1
@@ -296,7 +297,8 @@ if __name__ == "__main__":
     path_data_stastic_sorted = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic_sorted.txt"
     # path_data_stastic = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
     print("reading data......")
-    word_dict = read_data(path_data_stastic=path_data_stastic_sorted, freq=50, highfreq=200)
+    # word_dict = read_data(path_data_stastic=path_data_stastic_sorted, freq=50, highfreq=200)
+    word_dict = read_data(path_data_stastic=path_data_stastic_sorted)
     print("Handling feature......")
     path_filtedVectors = "./suda_richfeat_filtedVectors_feat_highfreq20%.txt"
     handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
