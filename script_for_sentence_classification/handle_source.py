@@ -40,7 +40,8 @@ def read_data(path_data=None):
     print("read data......")
     with open(path_data, encoding="UTF-8") as f:
         data_list = []
-        for line in f.readlines():
+        for line in f:
+            line = clean_str(line)
             line = line.strip("\n").split(" ")
             data_list.extend(line[1:])
         data = list(set(data_list))
