@@ -1,11 +1,11 @@
 # @Author : bamtercelboo
-# @Datetime : 2018/1/15 15:57
-# @File : handle_source.py
-# @Last Modify Time : 2018/1/15 15:57
+# @Datetime : 2018/1/16 13:58
+# @File : handle_context.py
+# @Last Modify Time : 2018/1/16 13:58
 # @Contact : bamtercelboo@{gmail.com, 163.com}
 
 """
-    FILE :  handle_source.py
+    FILE :  handle_context.py
     FUNCTION : None
 """
 
@@ -49,9 +49,9 @@ def read_data(path_data=None):
     return data
 
 
-def read_Embedding(path_wordEmbedding=None):
-    print("read word embedding.......")
-    with open(path_wordEmbedding, encoding="UTF-8") as f:
+def read_source_embedding(path_sourceEmbedding=None):
+    print("read source embedding.......")
+    with open(path_sourceEmbedding, encoding="UTF-8") as f:
         embedding_dict = {}
         embedding_dim = 0
         now_line = 0
@@ -64,7 +64,7 @@ def read_Embedding(path_wordEmbedding=None):
             embedding_dim = len(line) - 1
             embedding_dict[line[0]] = line[1:]
     f.close()
-    print("\nread embedding Finished")
+    print("\nread source embedding Finished")
     return embedding_dict, embedding_dim
 
 
@@ -74,31 +74,43 @@ def handle_Embedding(data_list=None, embedding_dict=None, embedding_dim=0, path_
     file.write(str(embedding_dim) + "\n")
     all_word = len(data_list)
     now_word = 0
+    oov_embedding = 0
+    oov_num = 0
+    iov_num = 0
     for word in data_list:
         now_word += 1
         sys.stdout.write("\rhandling with the {} word in data_list, all {} words.".format(now_word, all_word))
         if word in embedding_dict:
+            iov_num += 1
             file.write(word + " ")
             for vec in embedding_dict[word]:
                 file.write(vec + " ")
             file.write("\n")
+        elif word not in embedding_dict:
+            oov_num += 1
+            file.write(word + " ")
+            for vec in range(embedding_dim):
+                file.write(str(oov_embedding) + " ")
+            file.write("\n")
     file.close()
-    print("\nHandle Embedding Finished")
+    print("\niov number {} , oov number {}, all words {} == {}".format(iov_num, oov_num, (iov_num + oov_num),
+                                                                        len(data_list)))
+    print("Handle Embedding Finished")
 
 
 if __name__ == "__main__":
     # path_data = "./Data/CR/custrev.all"
-    # path_wordEmbedding = "./converted_word_MR.txt"
-    # path_Save_wordEmbedding = "./wordEmbedding_CR.txt"
+    path_data = "./Data/MR/rt-polarity.all"
+    path_sourceEmbedding = "./converted_word_MR.txt"
+    path_Save_wordEmbedding = "./wordEmbedding_MR.txt"
 
-    path_data = "./Data/CR/custrev.all"
+    # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
-    path_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/enwiki.emb.source"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/sentence_classification/enwiki.emb.source_CR.txt"
+    # path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/enwiki.emb.source"
+    # path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/sentence_classification/enwiki.emb.source_CR.txt"
 
     data_list = read_data(path_data=path_data)
-    embedding_dict, embedding_dim = read_Embedding(path_wordEmbedding=path_wordEmbedding)
+    embedding_dict, embedding_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)
     handle_Embedding(data_list=data_list, embedding_dict=embedding_dict, embedding_dim=embedding_dim,
                      path_Save_wordEmbedding=path_Save_wordEmbedding)
-
