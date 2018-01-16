@@ -47,7 +47,6 @@ def read_data(path_data=None):
             data_list.extend(line[1:])
         # data = list(sorted(set(data_list), reverse=True))
         data = list(set(data_list))
-        # print(data)
     return data
 
 
@@ -90,20 +89,27 @@ def read_feat_embedding(path_featEmbedding=None):
 
 
 def n_gram(word=None, feat_embedding_dict=None):
-    print("n-gram")
+    # print("n-gram")
     feat_embedding = 0
     feat_count = 0
     word = "<" + word + ">"
+    # print(word)
     for feat_num in range(3, 7):
         for i in range(0, len(word) - feat_num + 1):
             feat = word[i:(i + feat_num)]
             if feat.strip() in feat_embedding_dict:
-                # print(feat.strip(), feat_embedding_dict[feat.strip()])
                 feat_count += 1
                 list_float = [float(i) for i in feat_embedding_dict[feat.strip()]]
                 feat_embedding = np.array(feat_embedding) + np.array(list_float)
 
-    return feat_embed_dict, feat_count
+    return feat_embedding, feat_count
+
+
+def write_embed(file=None, word=None, word_embed=None):
+    file.write(word + " ")
+    for vec in word_embed.tolist():
+        file.write(str(round(vec, 6)) + " ")
+    file.write("\n")
 
 
 def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_dict=None, embedding_dim=0,
@@ -113,21 +119,28 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
     file.write(str(embedding_dim) + "\n")
     all_word = len(data_list)
     now_word = 0
-    oov_embedding = 0
     oov_num = 0
     iov_num = 0
     for word in data_list:
         now_word += 1
         sys.stdout.write("\rhandling with the {} word in data_list, all {} words.".format(now_word, all_word))
-        print(word)
+        # print(word)
         if word in source_embedding_dict:
             iov_num += 1
-            source_embedding = source_embed_dict[word]
+            source_embedding_list = [float(i) for i in source_embed_dict[word]]
+            source_embedding = np.array(source_embedding_list)
             feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
-            print(feat_sum_embedding)
+            word_embed = (feat_sum_embedding + source_embedding) / (1 + feat_ngram_num)
+            write_embed(file=file, word=word, word_embed=word_embed)
         else:
             oov_num += 1
             feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
+            if not isinstance(feat_sum_embedding, np.ndarray):
+                # if the word no n-gram in feature, replace with zero
+                feat_sum_embedding = np.array(list([0] * embedding_dim))
+                feat_ngram_num = 1
+            feat_sum_embedding = feat_sum_embedding / feat_ngram_num
+            write_embed(file=file, word=word, word_embed=feat_sum_embedding)
     file.close()
     print("\niov number {} , oov number {}, all words {} == {}".format(iov_num, oov_num, (iov_num + oov_num),
                                                                        len(data_list)))
@@ -144,10 +157,12 @@ if __name__ == "__main__":
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
-    # path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/enwiki.emb.source"
+    # path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/subword/enwiki.emb.source"
+    # path_featEmbedding = "/home/lzl/mszhang/suda_file_0113/file/subword/enwiki.emb.feature"
     # path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/sentence_classification/enwiki.emb.source_CR.txt"
 
     data_list = read_data(path_data=path_data)
+    # data_list = ["wayulink", "fileski", "promotioned", "asdasd"]
     source_embed_dict, source_embed_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)
     feat_embed_dict, feat_embed_dim = read_feat_embedding(path_featEmbedding=path_featEmbedding)
     assert source_embed_dim == feat_embed_dim
