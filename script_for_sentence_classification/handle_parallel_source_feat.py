@@ -57,7 +57,7 @@ def read_source_embedding(path_sourceEmbedding=None):
         source_embedding_dict = {}
         source_embedding_dim = 0
         now_line = 0
-        for line in f.readlines():
+        for line in f:
             now_line += 1
             sys.stdout.write("\rreading {} line.".format(now_line))
             line = line.strip().split(" ")
@@ -76,7 +76,7 @@ def read_feat_embedding(path_featEmbedding=None):
         feat_embedding_dict = {}
         feat_embedding_dim = 0
         now_line = 0
-        for line in f.readlines():
+        for line in f:
             now_line += 1
             sys.stdout.write("\rreading {} line.".format(now_line))
             line = line.strip().split(" ")
@@ -128,7 +128,7 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
         # print(word)
         if word in source_embedding_dict:
             iov_num += 1
-            source_embedding_list = [float(i) for i in source_embed_dict[word]]
+            source_embedding_list = [float(i) for i in source_embedding_dict[word]]
             source_embedding = np.array(source_embedding_list)
             write_embed(file=file, word=word, word_embed=source_embedding)
         else:
@@ -147,18 +147,18 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
 
 
 if __name__ == "__main__":
-    path_data = "./Data/CR/custrev.all"
-    # path_data = "./Data/MR/rt-polarity.all"
-    path_sourceEmbedding = "./embedding/parallel.enwiki.emb.source.small"
-    path_featEmbedding = "./embedding/parallel.enwiki.emb.feature.small"
-    path_Save_wordEmbedding = "./embedding/convert_subword_MR.txt"
-
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
+    # path_sourceEmbedding = "./embedding/parallel.enwiki.emb.source.small"
+    # path_featEmbedding = "./embedding/parallel.enwiki.emb.feature.small"
+    # path_Save_wordEmbedding = "./embedding/convert_subword_MR.txt"
+
+    path_data = "./Data/CR/custrev.all"
+    # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
-    # path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/subword/enwiki.emb.source"
-    # path_featEmbedding = "/home/lzl/mszhang/suda_file_0113/file/subword/enwiki.emb.feature"
-    # path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/sentence_classification/enwiki.emb.source_CR.txt"
+    path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/parallel/enwiki.emb.source"
+    path_featEmbedding = "/home/lzl/mszhang/suda_file_0113/file/parallel/enwiki.emb.feature"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/parallel/sentence_classification/enwiki.emb.source_feat_CR.txt"
 
     data_list = read_data(path_data=path_data)
     # data_list = ["wayulink", "fileski", "promotioned", "asdasd"]
