@@ -1,7 +1,7 @@
 # @Author : bamtercelboo
-# @Datetime : 2018/1/16 13:58
-# @File : handle_context.py
-# @Last Modify Time : 2018/1/16 13:58
+# @Datetime : 2018/1/16 15:08
+# @File : handle_subword.py
+# @Last Modify Time : 2018/1/16 15:08
 # @Contact : bamtercelboo@{gmail.com, 163.com}
 
 """
@@ -42,10 +42,11 @@ def read_data(path_data=None):
         data_list = []
         for line in f:
             line = clean_str(line)
-            line = line.strip("\n").split(" ")
+            line = line.split(" ")
             data_list.extend(line[1:])
+        # data = list(sorted(set(data_list), reverse=True))
         data = list(set(data_list))
-        # print(data_list)
+        # print(data)
     return data
 
 
@@ -86,7 +87,7 @@ def handle_Embedding(data_list=None, embedding_dict=None, embedding_dim=0, path_
             for vec in embedding_dict[word]:
                 file.write(vec + " ")
             file.write("\n")
-        elif word not in embedding_dict:
+        else:
             oov_num += 1
             file.write(word + " ")
             for vec in range(embedding_dim):
@@ -101,8 +102,8 @@ def handle_Embedding(data_list=None, embedding_dict=None, embedding_dim=0, path_
 if __name__ == "__main__":
     # path_data = "./Data/CR/custrev.all"
     path_data = "./Data/MR/rt-polarity.all"
-    path_sourceEmbedding = "./converted_word_MR.txt"
-    path_Save_wordEmbedding = "./wordEmbedding_MR.txt"
+    path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
+    path_Save_wordEmbedding = "./embedding/converted_subword_MR.txt"
 
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
@@ -114,3 +115,4 @@ if __name__ == "__main__":
     embedding_dict, embedding_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)
     handle_Embedding(data_list=data_list, embedding_dict=embedding_dict, embedding_dim=embedding_dim,
                      path_Save_wordEmbedding=path_Save_wordEmbedding)
+
