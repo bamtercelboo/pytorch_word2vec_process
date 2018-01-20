@@ -1,14 +1,15 @@
 # @Author : bamtercelboo
-# @Datetime : 2018/1/16 21:41
+# @Datetime : 2018/1/20 15:22
 # @File : handle_parallel_source_feat.py
-# @Last Modify Time : 2018/1/16 21:41
+# @Last Modify Time : 2018/1/20 15:22
 # @Contact : bamtercelboo@{gmail.com, 163.com}
 
 """
     FILE :  handle_parallel_source_feat.py
-    FUNCTION : iov use source
-               oov use feat
+    FUNCTION : iov --- source + feat
+               oov --- feat
 """
+
 
 import re
 import sys
@@ -57,7 +58,7 @@ def read_source_embedding(path_sourceEmbedding=None):
         source_embedding_dict = {}
         source_embedding_dim = 0
         now_line = 0
-        for line in f:
+        for line in f.readlines():
             now_line += 1
             sys.stdout.write("\rreading {} line.".format(now_line))
             line = line.strip().split(" ")
@@ -76,7 +77,7 @@ def read_feat_embedding(path_featEmbedding=None):
         feat_embedding_dict = {}
         feat_embedding_dim = 0
         now_line = 0
-        for line in f:
+        for line in f.readlines():
             now_line += 1
             sys.stdout.write("\rreading {} line.".format(now_line))
             line = line.strip().split(" ")
@@ -94,15 +95,17 @@ def n_gram(word=None, feat_embedding_dict=None):
     feat_embedding = 0
     feat_count = 0
     word = "<" + word + ">"
-    # print(word)
+    # print("word ", word)
     for feat_num in range(3, 7):
         for i in range(0, len(word) - feat_num + 1):
             feat = word[i:(i + feat_num)]
+            # print(feat)
             if feat.strip() in feat_embedding_dict:
+                # print("feat ", feat)
                 feat_count += 1
                 list_float = [float(i) for i in feat_embedding_dict[feat.strip()]]
                 feat_embedding = np.array(feat_embedding) + np.array(list_float)
-
+    # print(feat_count)
     return feat_embedding, feat_count
 
 
@@ -130,16 +133,18 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
             iov_num += 1
             source_embedding_list = [float(i) for i in source_embedding_dict[word]]
             source_embedding = np.array(source_embedding_list)
-            write_embed(file=file, word=word, word_embed=source_embedding)
+            feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
+            word_embed = (feat_sum_embedding + source_embedding) / (1 + feat_ngram_num)
+            write_embed(file=file, word=word, word_embed=word_embed)
         else:
             oov_num += 1
-            feat_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
-            if not isinstance(feat_embedding, np.ndarray):
+            feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
+            if not isinstance(feat_sum_embedding, np.ndarray):
                 # if the word no n-gram in feature, replace with zero
-                feat_embedding = np.array(list([0] * embedding_dim))
+                feat_sum_embedding = np.array(list([0] * embedding_dim))
                 feat_ngram_num = 1
-            feat_embedding = feat_embedding / feat_ngram_num
-            write_embed(file=file, word=word, word_embed=feat_embedding)
+            feat_sum_embedding = feat_sum_embedding / feat_ngram_num
+            write_embed(file=file, word=word, word_embed=feat_sum_embedding)
     file.close()
     print("\niov number {} , oov number {}, all words {} == {}".format(iov_num, oov_num, (iov_num + oov_num),
                                                                        len(data_list)))
@@ -149,19 +154,19 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
 if __name__ == "__main__":
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
-    # path_sourceEmbedding = "./embedding/parallel.enwiki.emb.source.small"
-    # path_featEmbedding = "./embedding/parallel.enwiki.emb.feature.small"
+    # path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
+    # path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
     # path_Save_wordEmbedding = "./embedding/convert_subword_MR.txt"
 
-    path_data = "./Data/CR/custrev.all"
+    path_data = "./Data/SST1/stsa.binary.all"
+    # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
-    path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/parallel/enwiki.emb.source"
-    path_featEmbedding = "/home/lzl/mszhang/suda_file_0113/file/parallel/enwiki.emb.feature"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/parallel/sentence_classification/enwiki.emb.source_feat_CR.txt"
+    path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/enwiki.emb.source"
+    path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/enwiki.emb.feature"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/sentence_classification/enwiki.emb.source_feat_1_SST1.txt"
 
     data_list = read_data(path_data=path_data)
-    # data_list = ["wayulink", "fileski", "promotioned", "asdasd"]
     source_embed_dict, source_embed_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)
     feat_embed_dict, feat_embed_dim = read_feat_embedding(path_featEmbedding=path_featEmbedding)
     assert source_embed_dim == feat_embed_dim

@@ -94,15 +94,17 @@ def n_gram(word=None, feat_embedding_dict=None):
     feat_embedding = 0
     feat_count = 0
     word = "<" + word + ">"
-    # print(word)
+    print("word ", word)
     for feat_num in range(3, 7):
         for i in range(0, len(word) - feat_num + 1):
             feat = word[i:(i + feat_num)]
+            # print(feat)
             if feat.strip() in feat_embedding_dict:
+                print("feat ", feat)
                 feat_count += 1
                 list_float = [float(i) for i in feat_embedding_dict[feat.strip()]]
                 feat_embedding = np.array(feat_embedding) + np.array(list_float)
-
+    print(feat_count)
     return feat_embedding, feat_count
 
 
@@ -128,7 +130,7 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
         # print(word)
         if word in source_embedding_dict:
             iov_num += 1
-            source_embedding_list = [float(i) for i in source_embed_dict[word]]
+            source_embedding_list = [float(i) for i in source_embedding_dict[word]]
             source_embedding = np.array(source_embedding_list)
             feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
             word_embed = (feat_sum_embedding + source_embedding) / (1 + feat_ngram_num)
@@ -155,6 +157,7 @@ if __name__ == "__main__":
     path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
     path_Save_wordEmbedding = "./embedding/convert_subword_MR.txt"
 
+    path_data = "./Data/SST1/stsa.binary.all"
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"

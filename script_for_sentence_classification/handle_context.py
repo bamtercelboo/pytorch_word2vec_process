@@ -101,10 +101,11 @@ def handle_Embedding(data_list=None, embedding_dict=None, embedding_dim=0, path_
 
 if __name__ == "__main__":
     # path_data = "./Data/CR/custrev.all"
-    path_data = "./Data/MR/rt-polarity.all"
+    path_data = "./Data/SST1/stsa.binary.all"
     path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
     path_Save_wordEmbedding = "./embedding/converted_subword_MR.txt"
 
+    # path_data = "./Data/SST1/stsa.binary.all"
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"

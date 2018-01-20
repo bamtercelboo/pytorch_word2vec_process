@@ -44,6 +44,9 @@ def sort_file(sorted_word_list=None, path_data=None, path_save=None):
 
 
 if __name__ == "__main__":
+    # path_data = "./embedding/enwiki-20150112_text_small_50_context-gram.txt"
+    # path_save = "./embedding/enwiki-20150112_text_small_50_context-gram_sorted.txt"
+
     path_data = "./embedding/enwiki-20150112_text_small_50_context-gram.txt"
     path_save = "./embedding/enwiki-20150112_text_small_50_context-gram_sorted.txt"
     sorted_word_list = read_file(path_file=path_data)
