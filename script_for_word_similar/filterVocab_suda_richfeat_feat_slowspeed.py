@@ -376,12 +376,12 @@ if __name__ == "__main__":
     # word_dict = read_data(path_data_stastic=path_data_stastic_sorted, freq=50, highfreq=200)
     # word_dict = read_data(path_data_stastic=path_data_stastic_sorted)
 
-    path_feat_vector = "/home/lzl/mszhang/richfeat0113/file/enwiki.emb.feature_handled.txt"
-    # path_feat_vector = "./enwiki.emb.feature.small"
+    # path_feat_vector = "/home/lzl/mszhang/richfeat0113/file/enwiki.emb.feature_handled.txt"
+    path_feat_vector = "./enwiki.emb.feature.small"
     vec = read_feat(path_feat_vector=path_feat_vector, release_mem=True)
     print("Handling feature......")
-    path_data_stastic_sorted = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic_sorted.txt"
-    # path_data_stastic_sorted = "./enwiki-20150112_text_handled_stastic_small.txt"
+    # path_data_stastic_sorted = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic_sorted.txt"
+    path_data_stastic_sorted = "./enwiki-20150112_text_handled_stastic_small.txt"
     path_filtedVectors = "./suda_richfeat0113_filtedVectors_feat.txt"
     # handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
     handle_feat_slowspeed(d=d, vec=vec, word_dict_path=path_data_stastic_sorted, path_filtedVectors=path_filtedVectors)

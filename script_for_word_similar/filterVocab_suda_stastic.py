@@ -8,6 +8,7 @@ import os
 import sys
 import gc
 import numpy as np
+from collections import OrderedDict
 
 
 def handle_data_step1(path=None, save_path=None, windows_size=0, d=None):
@@ -87,6 +88,8 @@ def handle_data_step3(path=None, path_write=None):
             file.write(" " + word_value + " " + str(word_dict[word][word_value]))
         file.write("\n")
     file.close()
+    print("Stastic Finished.")
+    # return word_dict
 
 
 def read_feat(path_feat_vector=None, release_mem=False):
@@ -104,24 +107,19 @@ def read_feat(path_feat_vector=None, release_mem=False):
     return vec
 
 
-def read_data(path_data_stastic=None, freq=1, highfreq=1):
+def read_data(path_data_stastic=None, freq=1):
     word_list = []
     word_dict = {}
     with open(path_data_stastic, encoding="UTF-8") as f:
         now_line = 0
-        for line in f:
+        for line in f.readlines():
             now_line += 1
             sys.stdout.write("\rHandling with the {} line".format(now_line))
             line = line.strip().split(" ")
             window_dict = {}
             for i in range(0, len(line) - 2, 2):
-                # if i > highfreq:
-                #     break
-                if i > (((len(line) - 2) / 2) * 0.3):
-                    break
-                window_dict[line[i + 2]] = int(line[i + 3])
-                # if int(line[i + 3]) >= freq:
-                #     window_dict[line[i + 2]] = int(line[i + 3])
+                if int(line[i + 3]) >= freq:
+                    window_dict[line[i + 2]] = int(line[i + 3])
             window_dict["count"] = int(line[1])
             word_dict[line[0]] = window_dict
         f.close()
@@ -253,10 +251,10 @@ if __name__ == "__main__":
     # windows_size = 5
 
     # copy with the fullvocab
-    path_fullVocab = "./fullVocab.txt"
-    d = {}
-    for line in open(path_fullVocab, 'r'):
-        d["<" + line.strip() + ">"] = 0
+    # path_fullVocab = "./fullVocab.txt"
+    # d = {}
+    # for line in open(path_fullVocab, 'r'):
+    #     d["<" + line.strip() + ">"] = 0
 
     # copy with the corpus
     # print("Handling data step one......")
@@ -273,16 +271,18 @@ if __name__ == "__main__":
 
     # path_handled = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled.txt"
     # path_write = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
-    # path_handled = "./enwiki-20150112_text_small.handled.2.sorted.txt"
-    # path_write = "./suda_data.txt"
-    # handle_data_step3(path=path_handled, path_write=path_write)
+
+    path_handled = "./enwiki-20150112_text_small.handled.2.sorted.txt"
+    path_write = "./suda_data.txt"
+    # path_handled = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled.txt"
+    # path_write = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_sorted.txt"
+    handle_data_step3(path=path_handled, path_write=path_write)
 
     # copy with the feature vector
     # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/richfeat/enwiki.emb.feature"
     # path_feat_vector = "/home/lzl/mszhang/richfeat/richfeat/enwiki.emb.feature_handled.txt"
-    path_feat_vector = "/home/lzl/mszhang/richfeat0113/file/enwiki.emb.feature_handled.txt"
     # path_feat_vector = "./enwiki.emb.feature.small"
-    vec = read_feat(path_feat_vector=path_feat_vector, release_mem=True)
+    # vec = read_feat(path_feat_vector=path_feat_vector, release_mem=True)
     # handle feature
 
     # path_feat_vector = "./enwiki.emb.feature.small"
@@ -294,15 +294,13 @@ if __name__ == "__main__":
 
     # path_data_stastic = "./enwiki-20150112_text_handled_stastic_small.txt"
     # path_data_stastic = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic.txt"
-    path_data_stastic_sorted = "/home/lzl/mszhang/data-enwiki/file/enwiki-20150112_text_handled_stastic_sorted.txt"
     # path_data_stastic = "/data/mszhang/ACL2017-Word2Vec/data/enwiki-20150112_text_handled_stastic.txt"
-    print("reading data......")
-    # word_dict = read_data(path_data_stastic=path_data_stastic_sorted, freq=50, highfreq=200)
-    word_dict = read_data(path_data_stastic=path_data_stastic_sorted)
-    print("Handling feature......")
-    path_filtedVectors = "./suda_richfeat0113_filtedVectors_feat30%.txt"
-    handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
-    print("\nHandle Finished")
+    # print("reading data......")
+    # word_dict = read_data(path_data_stastic=path_data_stastic, freq=50)
+    # print("Handling feature......")
+    # path_filtedVectors = "./suda_richfeat_filtedVectors_feat.txt"
+    # handle_feat(d=d, vec=vec, word_dict=word_dict, path_filtedVectors=path_filtedVectors)
+    # print("\nHandle Finished")
 
 
 
