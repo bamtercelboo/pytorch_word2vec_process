@@ -176,7 +176,10 @@ if __name__ == "__main__":
     path_featEmbedding = "./embedding/richfeat.enwiki.emb.feature.small"
     path_Save_wordEmbedding = "./embedding/convert_subword_CR.txt"
 
-    path_data = "./Data/SST1/stsa.binary.all"
+    path_data = "./Data/SST2/stsa.fine.all"
+    # path_data = "./Data/TREC/TREC.all"
+    # path_data = "./Data/MPQA/mpqa.all"
+    # path_data = "./Data/SST1/stsa.binary.all"
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"

@@ -101,16 +101,19 @@ def handle_Embedding(data_list=None, embedding_dict=None, embedding_dim=0, path_
 
 if __name__ == "__main__":
     # path_data = "./Data/CR/custrev.all"
-    path_data = "./Data/MR/rt-polarity.all"
-    path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
-    path_Save_wordEmbedding = "./embedding/converted_subword_MR.txt"
+    # path_data = "./Data/MR/rt-polarity.all"
+    # path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
+    # path_Save_wordEmbedding = "./embedding/converted_subword_MR.txt"
 
-    path_data = "./Data/SST1/stsa.binary.all"
+    # path_data = "./Data/SST2/stsa.fine.all"
+    path_data = "./Data/TREC/TREC.all"
+    # path_data = "./Data/MPQA/mpqa.all"
+    # path_data = "./Data/SST1/stsa.binary.all"
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
-    # path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/enwiki.emb.source"
-    # path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/sentence_classification/enwiki.emb.source_CR.txt"
+    path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/context/enwiki.emb.source"
+    path_Save_wordEmbedding ="/home/lzl/mszhang/suda_file0120/file/file0120/context/sentence_classification/enwiki.emb.source_SST2_OOV.txt"
 
     data_list = read_data(path_data=path_data)
     embedding_dict, embedding_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)

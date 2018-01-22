@@ -11,7 +11,7 @@
 
 import os
 import sys
-
+from collections import OrderedDict
 
 def handle_corpus_stastic_sorted(path_corpus_context=None, path_corpus_stastic_sorted=None):
     """
@@ -68,11 +68,20 @@ def handle_corpus_stastic_sorted(path_corpus_context=None, path_corpus_stastic_s
 
 
 def judge_same(judge_list=None):
-    judge_list = list(set(judge_list))
+    # judge_list = list(set(judge_list))
     same = False
     if len(judge_list) == 1:
         same = True
     return same
+
+
+def sort_by_value(d):
+    items = d.items()
+    backitems = [[v[1], v[0]] for v in items]
+    backitems.sort(reverse=True)
+    backitems = [[v[1], v[0]] for v in backitems]
+    # print()
+    return dict(backitems)
 
 
 def handle_ordercorpus_stastic_sorted(path_corpus_context=None, path_corpus_stastic_sorted=None):
@@ -89,25 +98,48 @@ def handle_ordercorpus_stastic_sorted(path_corpus_context=None, path_corpus_stas
     file = open(path_corpus_stastic_sorted, mode="w", encoding="UTF-8")
     with open(path_corpus_context, encoding="UTF-8") as f:
         word_dict = {}
+        # word_dict = OrderedDict()
         now_line = 0
-        judge_list = []
+        judge_list = {}
         for line in f:
+            # print("////////////////////////////////////////////")
             now_line += 1
             sys.stdout.write("\rhandling with {} line.".format(now_line))
             line_list = line.strip("\n").strip(" ").split(" ")
+            # print(line_list)
             word = line_list[0]
-            judge_list.append(word)
+            judge_list[word] = 1
             judge = judge_same(judge_list)
             if judge is False:
-                judge_list = []
+                judge_list = {}
+                # print("******************************")
+                # print(word_dict)
                 for w in word_dict:
-                    word_dict[w] = dict(sorted(word_dict[w].items(), key=lambda t: t[1], reverse=True))
+                    # print(w)
+                    # word_dict[w] = dict(sorted(word_dict[w].items(), key=lambda t: t[1], reverse=True))
+                    # print(word_dict[w])
                     file.write(w + " " + str(word_dict[w]["count"]))
                     for word_value in word_dict[w]:
                         file.write(" " + word_value + " " + str(word_dict[w][word_value]))
                     file.write("\n")
+                    # wdic = dict(sorted(word_dict[w].items(), key=lambda t: t[1], reverse=True))
+                    # wdic = [v for v in sorted(word_dict[w].values(), reverse=True)]
+                    # print(word_dict[w])
+                    # for value, key in wdic:
+                    #     print(value)
+                    # print(word_dict[w].ge)
+                    # wdic = dict(sorted(word_dict[w].items(), key=lambda t: t[1], reverse=True))
+                    # wdic = sorted(word_dict[w].items(), key=lambda t: t[1], reverse=True)
+                    # print(word_dict[w])
+                    # print("*****************************")
+                    # print(wdic)
+                    # file.write(w + " " + str(word_dict[w]["count"]))
+                    # for word_value in wdic:
+                    #     file.write(" " + word_value + " " + str(wdic[word_value]))
+                    # file.write("\n")
                 word_dict = {}
             if word not in word_dict:
+                # window_dict = OrderedDict()
                 window_dict = {}
                 for win_word in line_list[1:]:
                     if win_word not in window_dict:
@@ -123,7 +155,14 @@ def handle_ordercorpus_stastic_sorted(path_corpus_context=None, path_corpus_stas
                         word_dict[word][win_word] += 1
                     else:
                         word_dict[word][win_word] = 1
-
+        for w in word_dict:
+            # print(w)
+            # word_dict[w] = dict(sorted(word_dict[w].items(), key=lambda t: t[1], reverse=True))
+            # print(word_dict[w])
+            file.write(w + " " + str(word_dict[w]["count"]))
+            for word_value in word_dict[w]:
+                file.write(" " + word_value + " " + str(word_dict[w][word_value]))
+            file.write("\n")
         print("\nHandle Finished")
     f.close()
     file.close()
@@ -141,11 +180,14 @@ if __name__ == "__main__":
 
     # ***************************************************************************************
 
-    path_ordercorpus_context = "./embedding/enwiki-20150112_text_small_50_context-gram_sorted.txt"
-    path_corpus_stastic_sorted = "./embedding/enwiki-20150112_text_small_50_context-gram_static_sorted.txt"
+    # path_ordercorpus_context = "./embedding/enwiki-20150112_text_context_ngram_allcorpus_split_sorted_all_m_small"
+    # path_corpus_stastic_sorted = "./embedding/enwiki.txt"
 
-    # path_corpus_context = "./embedding/enwiki-20150112_text_small_50_context-gram.txt"
-    # path_corpus_stastic_sorted = "./embedding/enwiki-20150112_text_small_50_context-gram_stat_sorted.txt"
+    path_ordercorpus_context = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/filter_corpus_fichfeat0120_stastic.txt"
+    path_corpus_stastic_sorted = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/filter_corpus_fichfeat0120_stastic.txt"
+
+    # path_ordercorpus_context = "/home/lzl/mszhang/data-enwiki/enwiki_20150112_text_context_ngram_allcorpus_sorted/enwiki-20150112_text_context_ngram_allcorpus_split_sorted_all_m"
+    # path_corpus_stastic_sorted = "/home/lzl/mszhang/data-enwiki/enwiki_20150112_text_context_ngram_allcorpus_sorted/filter_corpus_fichfeat0120_stastic.txt"
 
     handle_ordercorpus_stastic_sorted(path_corpus_context=path_ordercorpus_context,
                                       path_corpus_stastic_sorted=path_corpus_stastic_sorted)

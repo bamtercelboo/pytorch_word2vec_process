@@ -1,11 +1,11 @@
 # @Author : bamtercelboo
 # @Datetime : 2018/1/20 15:22
-# @File : handle_parallel_source_feat.py
+# @File : handle_parallel_source_feat_1.py
 # @Last Modify Time : 2018/1/20 15:22
 # @Contact : bamtercelboo@{gmail.com, 163.com}
 
 """
-    FILE :  handle_parallel_source_feat.py
+    FILE :  handle_parallel_source_feat_1.py
     FUNCTION : iov --- source + feat
                oov --- feat
 """
@@ -158,13 +158,16 @@ if __name__ == "__main__":
     # path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
     # path_Save_wordEmbedding = "./embedding/convert_subword_MR.txt"
 
-    path_data = "./Data/SST1/stsa.binary.all"
+    # path_data = "./Data/SST2/stsa.fine.all"
+    path_data = "./Data/TREC/TREC.all"
+    # path_data = "./Data/MPQA/mpqa.all"
+    # path_data = "./Data/SST1/stsa.binary.all"
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
     path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/enwiki.emb.source"
     path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/enwiki.emb.feature"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/sentence_classification/enwiki.emb.source_feat_1_SST1.txt"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/sentence_classification/enwiki.emb.source_feat_SST2.txt"
 
     data_list = read_data(path_data=path_data)
     source_embed_dict, source_embed_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)
