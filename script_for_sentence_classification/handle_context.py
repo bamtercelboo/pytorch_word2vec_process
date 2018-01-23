@@ -32,7 +32,7 @@ def clean_str(string):
     string = re.sub(r"\?", " \? ", string)
     string = re.sub(r"\s{2,}", " ", string)
 
-    return string.strip()
+    return string.strip().lower()
 
 
 def read_data(path_data=None):

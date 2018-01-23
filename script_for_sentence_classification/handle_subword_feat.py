@@ -32,7 +32,8 @@ def clean_str(string):
     string = re.sub(r"\?", " \? ", string)
     string = re.sub(r"\s{2,}", " ", string)
 
-    return string.strip()
+    return string.strip().lower()
+    # return string.strip()
 
 
 def read_data(path_data=None):
@@ -77,11 +78,37 @@ def n_gram(word=None, feat_embedding_dict=None):
     for feat_num in range(3, 7):
         for i in range(0, len(word) - feat_num + 1):
             feat = word[i:(i + feat_num)]
+            # print(feat)
             if feat.strip() in feat_embedding_dict:
+                # print(feat)
+                # print(feat.strip())
                 feat_count += 1
                 list_float = [float(i) for i in feat_embedding_dict[feat.strip()]]
                 feat_embedding = np.array(feat_embedding) + np.array(list_float)
 
+    return feat_embedding, feat_count
+
+
+def n_gram_1(word=None, feat_embedding_dict=None):
+    # print("n-gram")
+    feat_embedding = 0
+    feat_count = 0
+    word = "<" + word + ">"
+    # print(word)
+    feat_list = []
+    for feat_num in range(3, 7):
+        for i in range(0, len(word) - feat_num + 1):
+            feat = word[i:(i + feat_num)]
+            # print(feat)
+            if feat.strip() in feat_embedding_dict:
+                # print(feat)
+                # print(feat.strip())
+                feat_count += 1
+                list_float = [float(i) for i in feat_embedding_dict[feat.strip()]]
+                # print(list_float)
+                feat_list.append(list_float)
+                # feat_embedding = np.array(feat_embedding) + np.array(list_float)
+    feat_embedding = np.sum(feat_list, axis=0)
     return feat_embedding, feat_count
 
 
@@ -102,8 +129,10 @@ def handle_Embedding(data_list=None, feat_embedding_dict=None, embedding_dim=0, 
     iov_num = 0
     for word in data_list:
         now_word += 1
+        # print(word)
         sys.stdout.write("\rhandling with the {} word in data_list, all {} words.".format(now_word, all_word))
-        feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
+        feat_sum_embedding, feat_ngram_num = n_gram_1(word=word, feat_embedding_dict=feat_embedding_dict)
+        # feat_sum_embedding_1, feat_ngram_num_1 = n_gram_1(word=word, feat_embedding_dict=feat_embedding_dict)
         if not isinstance(feat_sum_embedding, np.ndarray):
             # if the word no n-gram in feature, replace with zero
             feat_sum_embedding = np.array(list([0] * embedding_dim))
@@ -117,6 +146,8 @@ def handle_Embedding(data_list=None, feat_embedding_dict=None, embedding_dim=0, 
 if __name__ == "__main__":
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
+    # path_data = "./Data/TREC/TREC.all"
+    # path_data = "./Data/SST2/stsa.fine.all"
     # path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
     # path_Save_wordEmbedding = "./embedding/convert_subword_MR.txt"
 

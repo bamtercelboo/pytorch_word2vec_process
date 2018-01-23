@@ -34,7 +34,7 @@ def clean_str(string):
     string = re.sub(r"\?", " \? ", string)
     string = re.sub(r"\s{2,}", " ", string)
 
-    return string.strip()
+    return string.strip().lower()
 
 
 def read_data(path_data=None):
@@ -98,6 +98,7 @@ def n_gram(word=None, feat_embedding_dict=None):
     for feat_num in range(3, 7):
         for i in range(0, len(word) - feat_num + 1):
             feat = word[i:(i + feat_num)]
+            # print(feat)
             if feat.strip() in feat_embedding_dict:
                 feat_count += 1
                 list_float = [float(i) for i in feat_embedding_dict[feat.strip()]]
@@ -164,7 +165,7 @@ if __name__ == "__main__":
     # path_data = "./Data/Subj/subj.all"
     path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.source"
     path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.feature"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/sentence_classification/enwiki.emb.source_feat_SST2.txt"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/sentence_classification/enwiki.emb.source_feat_CR2.txt"
 
     data_list = read_data(path_data=path_data)
     # data_list = ["wayulink", "fileski", "promotioned", "asdasd"]
