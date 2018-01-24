@@ -44,13 +44,13 @@ def extract_corpus(path_extract_corpus=None, data_dict=None, path_extracted_corp
 
 
 if __name__ == "__main__":
-    # path_data = "./Data/fullVocab.txt"
-    # path_extract_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.txt"
-    # path_extracted_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
-
     path_data = "./Data/fullVocab.txt"
-    path_extract_corpus = "/home/lzl/mszhang/suda_file0120/corpus/filter_corpus_fichfeat0120_stastic_sorted/filter_corpus_richfeat0120_stastic_sorted.txt"
-    path_extracted_corpus = "/home/lzl/mszhang/suda_file0120/corpus/word_similar/filter_corpus_richfeat0120_stastic_sorted_similar.txt"
+    path_extract_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.txt"
+    path_extracted_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
+
+    # path_data = "./Data/fullVocab.txt"
+    # path_extract_corpus = "/home/lzl/mszhang/suda_file0120/corpus/filter_corpus_fichfeat0120_stastic_sorted/filter_corpus_richfeat0120_stastic_sorted.txt"
+    # path_extracted_corpus = "/home/lzl/mszhang/suda_file0120/corpus/word_similar/filter_corpus_richfeat0120_stastic_sorted_similar.txt"
 
     data_dict = read_data(path_data=path_data)
     extract_corpus(path_extract_corpus=path_extract_corpus, data_dict=data_dict, path_extracted_corpus=path_extracted_corpus)

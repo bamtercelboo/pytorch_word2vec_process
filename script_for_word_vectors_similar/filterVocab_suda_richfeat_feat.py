@@ -127,20 +127,20 @@ def handle_feat(data_dict=None, feat_dict=None, corpus_dict=None, path_filtedVec
 
 
 if __name__ == "__main__":
-    path_similar_data = "./Data/fullVocab.txt"
-    path_feat_vector = "./Embedding/enwiki.emb.feature.small"
-    path_sorted_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
-    path_filtedVectors = "./Embedding/aa.txt"
+    # path_similar_data = "./Data/fullVocab.txt"
+    # path_feat_vector = "./Embedding/enwiki.emb.feature.small"
+    # path_sorted_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
+    # path_filtedVectors = "./Embedding/aa.txt"
 
     # path_similar_data = "./Data/fullVocab.txt"
     # path_feat_vector = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/enwiki.emb.feature"
     # path_sorted_corpus = "/home/lzl/mszhang/suda_file0120/corpus/word_similar/filter_corpus_richfeat0120_stastic_sorted_similar.txt"
     # path_filtedVectors = "./suda_0120/richfeat/suda_richfeat0120_filtedVectors_featall.txt"
 
-    # path_similar_data = "./Data/fullVocab.txt"
-    # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/enwiki.emb.feature"
-    # path_sorted_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/word_similar/filter_corpus_richfeat0120_stastic_sorted_similar.txt"
-    # path_filtedVectors = "./suda_0120/richfeat/suda_richfeat0120_filtedVectors_featall.txt"
+    path_similar_data = "./Data/fullVocab.txt"
+    path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/enwiki.emb.feature"
+    path_sorted_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/enwiki-20150112_text_context_ngram_allcorpus_stastic_similar_handled_sorted/enwiki-20150112_text_context_ngram_allcorpus_stastic_similar_handled_sorted.txt"
+    path_filtedVectors = "./suda_0120/richfeat/suda_richfeat0120_filtedVectors_feata30%.txt"
 
     corpus_dict = read_sorted_corpus(path_sorted_corpus=path_sorted_corpus, ratio=0.3)
     data_dict = read_similar_data(path_similar_data=path_similar_data)
