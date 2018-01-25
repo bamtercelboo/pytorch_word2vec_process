@@ -129,7 +129,7 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
         # print(word)
         if word in source_embedding_dict:
             iov_num += 1
-            source_embedding_list = [float(i) for i in source_embed_dict[word]]
+            source_embedding_list = [float(i) for i in source_embedding_dict[word]]
             source_embedding = np.array(source_embedding_list)
             feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
             word_embed = (feat_sum_embedding + source_embedding) / (1 + feat_ngram_num)

@@ -51,9 +51,12 @@ if __name__ == "__main__":
     # path_data = "./embedding/filter_corpus_fichfeat0120_stastic_small.txt"
     # path_save_sorted = "./embedding/filter_corpus_fichfeat0120_stastic_sorted_small.txt"
     
-    path_data = "/home/lzl/mszhang/suda_file0120/corpus/filter_corpus_fichfeat0120_stastic/filter_corpus_fichfeat0120_stastic.txt"
-    path_save_sorted = "/home/lzl/mszhang/suda_file0120/corpus/filter_corpus_fichfeat0120_stastic_sorted/silter_corpus_richfeat0120_stastic_sorted.txt"
-    
+    # path_data = "/home/lzl/mszhang/suda_file0120/corpus/filter_corpus_fichfeat0120_stastic/filter_corpus_fichfeat0120_stastic.txt"
+    # path_save_sorted = "/home/lzl/mszhang/suda_file0120/corpus/filter_corpus_fichfeat0120_stastic_sorted/silter_corpus_richfeat0120_stastic_sorted.txt"
+
+    path_data = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_SST1_statstic_handled.txt"
+    path_save_sorted = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_SST1_statstic_handled_sorted.txt"
+
     sort_corpus(path_data=path_data, path_save_sorted=path_save_sorted)
 
 

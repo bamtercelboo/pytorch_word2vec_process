@@ -197,7 +197,7 @@ def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=Non
                 feat_ngram_num = 1
             #  context n-gram
             word_context_vector, F_num, count_word = context_n_gram(word=word, corpus_dict=corpus_dict,
-                                                                    feat_embed_dict=feat_embed_dict)
+                                                                    feat_embed_dict=feat_embedding_dict)
             # calculate
             feat_sum_embedding = np.divide(feat_sum_embedding, feat_ngram_num + F_num / count_word)
             word_context_vector = np.divide(word_context_vector, count_word * feat_ngram_num + F_num)

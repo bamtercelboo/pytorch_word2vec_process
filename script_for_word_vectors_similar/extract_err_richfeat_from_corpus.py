@@ -13,8 +13,6 @@ import os
 import sys
 import re
 
-from collections import defaultdict
-
 
 def clean_str(string):
     """
@@ -43,12 +41,9 @@ def read_data(path_data=None):
     with open(path_data, encoding="UTF-8") as f:
         data_list = []
         for line in f:
-            line = clean_str(line)
-            line = line.split(" ")
-            data_list.extend(line[1:])
+            line = line.strip().split(" ")
+            data_list.append(clean_str(line[0]))
         data = set(data_list)
-        # data = list(set(data_list))
-    # print(data)
     print("The Data contains {} word.".format(len(data)))
     print("Read Data Finished.")
     f.close()
@@ -59,6 +54,7 @@ def extract_corpus(path_extract_corpus=None, data_dict=None, path_extracted_corp
     print("extracting corpus from {}".format(path_extract_corpus))
     if os.path.exists(path_extracted_corpus):
         os.remove(path_extracted_corpus)
+    print("Save File to {}".format(path_extracted_corpus))
     file = open(path_extracted_corpus, encoding="UTF-8", mode="w")
     with open(path_extract_corpus, encoding="UTF-8") as f:
         now_line = 0
@@ -74,18 +70,18 @@ def extract_corpus(path_extract_corpus=None, data_dict=None, path_extracted_corp
 
 
 if __name__ == "__main__":
-    path_data = "./Data/CR/custrev.all"
-    path_extract_corpus = "./embedding/enwiki-20150112_text_handled_stastic_small.txt"
-    path_extracted_corpus = "./embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
+    # path_data = "./Embedding/enwiki.emb.source_small"
+    # path_extract_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.txt"
+    # path_extracted_corpus = "./Embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
 
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/SST2/stsa.fine.all"
     # path_data = "./Data/TREC/TREC.all"
     # path_data = "./Data/MPQA/mpqa.all"
     # path_data = "./Data/Subj/subj.all"
-    # path_data = "./Data/SST1/stsa.binary.all"
-    # path_extract_corpus = "/data/mszhang/ACL2017-Word2Vec/data/save_enwiki_20150112_text_context_ngram_allcorpus/enwiki_20150112_text_context_ngram_allcorpus_sorted/enwiki-20150112_text_context_ngram_allcorpus_stastic/enwiki-20150112_text_context_ngram_allcorpus_stastic.txt"
-    # path_extracted_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_Subj_statstic.txt"
+    path_data = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/enwiki.emb.source"
+    path_extract_corpus = "/data/mszhang/ACL2017-Word2Vec/data/save_enwiki_20150112_text_context_ngram_allcorpus/enwiki_20150112_text_context_ngram_allcorpus_sorted/enwiki-20150112_text_context_ngram_allcorpus_stastic/enwiki-20150112_text_context_ngram_allcorpus_stastic.txt"
+    path_extracted_corpus = "/data/mszhang/ACL2017-Word2Vec/data/save_enwiki_20150112_text_context_ngram_allcorpus/enwiki_20150112_text_context_ngram_allcorpus_sorted/enwiki-20150112_text_context_ngram_allcorpus_stastic/enwiki-20150112_text_context_ngram_allcorpus_stastic_for_richfeatsource.txt"
 
     data_dict = read_data(path_data=path_data)
     extract_corpus(path_extract_corpus=path_extract_corpus, data_dict=data_dict, path_extracted_corpus=path_extracted_corpus)

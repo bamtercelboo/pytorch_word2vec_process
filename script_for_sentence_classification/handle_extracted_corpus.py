@@ -120,8 +120,8 @@ if __name__ == "__main__":
     # path_extracted_corpus = "./embedding/enwiki-20150112_text_context_ngram_allcorpus_stastic_similar_small.txt"
     # path_extracted_corpus_handled = "./embedding/enwiki-20150112_text_handled_stastic_small_extracted_handled.txt"
 
-    path_extracted_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_SST1_statstic.txt"
-    path_extracted_corpus_handled = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_SST1_statstic_handled.txt"
+    path_extracted_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_MPQA_statstic.txt"
+    path_extracted_corpus_handled = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_MPQA_statstic_handled.txt"
 
     # handle_extracted_corpus(path_extracted_corpus=path_extracted_corpus, path_extracted_corpus_handled=path_extracted_corpus_handled)
     # handle_extracted_corpus(path_extracted_corpus=path_extracted_corpus, path_extracted_corpus_handled=path_extracted_corpus_handled)
