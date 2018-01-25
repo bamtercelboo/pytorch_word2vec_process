@@ -1,13 +1,17 @@
 # @Author : bamtercelboo
-# @Datetime : 2018/1/24 20:17
+# @Datetime : 2018/1/17 10:15
 # @File : handle_richfeat_source_feat.py
-# @Last Modify Time : 2018/1/24 20:17
+# @Last Modify Time : 2018/1/17 10:15
 # @Contact : bamtercelboo@{gmail.com, 163.com}
 
 """
     FILE :  handle_richfeat_source_feat.py
-    FUNCTION : iv, oov ---  source + feat avg
+    FUNCTION : iov use source;
+               oov use feat;
+               but notice the difference with subword and parallel,the richfeat feature not only contains n-gram
+               feature ,but also has context(window_size=5) feature;
 """
+
 
 
 import re
@@ -179,25 +183,12 @@ def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=Non
         now_word += 1
         sys.stdout.write("\rhandling with the {} word in data_list, all {} words.".format(now_word, all_word))
         if word in source_embedding_dict:
+            iov_num += 1
             source_embedding_list = [float(i) for i in source_embed_dict[word]]
             source_embedding = np.array(source_embedding_list)
-            # word n-gram
-            feat_sum_embedding, feat_ngram_num = word_n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
-            if not isinstance(feat_sum_embedding, np.ndarray):
-                # if the word no n-gram in feature, replace with zero
-                feat_sum_embedding = np.array(list([0] * embedding_dim))
-                feat_ngram_num = 1
-            #  context n-gram
-            word_context_vector, F_num, count_word = context_n_gram(word=word, corpus_dict=corpus_dict,
-                                                                    feat_embed_dict=feat_embed_dict)
-            # calculate
-            feat_ngram_num += 1
-            feat_sum_embedding = np.divide(np.add(feat_sum_embedding, source_embedding), feat_ngram_num + F_num / count_word)
-            word_context_vector = np.divide(word_context_vector, count_word * feat_ngram_num + F_num)
-            word_context_ngram_embed = np.add(feat_sum_embedding, word_context_vector)
-            write_embed(file=file, word=word, word_embed=word_context_ngram_embed)
-
+            write_embed(file=file, word=word, word_embed=source_embedding)
         else:
+            oov_num += 1
             # word n-gram
             feat_sum_embedding, feat_ngram_num = word_n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
             if not isinstance(feat_sum_embedding, np.ndarray):
@@ -217,22 +208,22 @@ def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=Non
             # write file
             write_embed(file=file, word=word, word_embed=word_context_ngram_embed)
     file.close()
-    # print("\niov number {} , oov number {}, all words {} == {}".format(iov_num, oov_num, (iov_num + oov_num),
-    #                                                                    len(data_list)))
+    print("\niov number {} , oov number {}, all words {} == {}".format(iov_num, oov_num, (iov_num + oov_num),
+                                                                       len(data_list)))
     print("Handle Embedding Finished")
 
 
 if __name__ == "__main__":
-    path_data = "./Data/CR/custrev.all"
+    # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
-    path_corpus = "./embedding/richfeat_enwiki-20150112_text_handled_stastic_sorted.small.txt"
-    path_sourceEmbedding = "./embedding/richfeat.enwiki.emb.source.small"
-    path_featEmbedding = "./embedding/richfeat.enwiki.emb.feature.small"
-    path_Save_wordEmbedding = "./embedding/convert_subword_CR.txt"
+    # path_corpus = "./embedding/richfeat_enwiki-20150112_text_handled_stastic_sorted.small.txt"
+    # path_sourceEmbedding = "./embedding/richfeat.enwiki.emb.source.small"
+    # path_featEmbedding = "./embedding/richfeat.enwiki.emb.feature.small"
+    # path_Save_wordEmbedding = "./embedding/convert_subword_CR.txt"
 
     # path_data = "./Data/SST2/stsa.fine.all"
     # path_data = "./Data/TREC/TREC.all"
-    # path_data = "./Data/MPQA/mpqa.all"
+    path_data = "./Data/MPQA/mpqa.all"
     # path_data = "./Data/SST1/stsa.binary.all"
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
@@ -242,8 +233,13 @@ if __name__ == "__main__":
     # path_featEmbedding = "/home/lzl/mszhang/suda_file_0113/file/subword/enwiki.emb.feature"
     # path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/sentence_classification/enwiki.emb.source_CR.txt"
 
+    path_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_MPQA_statstic_handled.txt"
+    path_featEmbedding = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/enwiki.emb.feature"
+    path_sourceEmbedding = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/enwiki.emb.source"
+    path_Save_wordEmbedding = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/sentence_classification/enwiki.emb.source_feat_MPQA_1.txt"
+
     data_list = read_data(path_data=path_data)
-    corpus_dict = read_corpus_stastical_sorted(path_corpus=path_corpus, fileter_ratio=0.3)
+    corpus_dict = read_corpus_stastical_sorted(path_corpus=path_corpus, fileter_ratio=1.0)
     source_embed_dict, source_embed_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)
     feat_embed_dict, feat_embed_dim = read_feat_embedding(path_featEmbedding=path_featEmbedding)
     assert source_embed_dim == feat_embed_dim
