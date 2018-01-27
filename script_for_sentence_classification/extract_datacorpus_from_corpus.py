@@ -74,18 +74,19 @@ def extract_corpus(path_extract_corpus=None, data_dict=None, path_extracted_corp
 
 
 if __name__ == "__main__":
-    path_data = "./Data/CR/custrev.all"
-    path_extract_corpus = "./embedding/enwiki-20150112_text_handled_stastic_small.txt"
-    path_extracted_corpus = "./embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
+    # path_data = "./Data/CR/custrev.all"
+    # path_extract_corpus = "./embedding/enwiki-20150112_text_handled_stastic_small.txt"
+    # path_extracted_corpus = "./embedding/enwiki-20150112_text_handled_stastic_small.extracted.txt"
 
+    path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/SST2/stsa.fine.all"
     # path_data = "./Data/TREC/TREC.all"
     # path_data = "./Data/MPQA/mpqa.all"
     # path_data = "./Data/Subj/subj.all"
     # path_data = "./Data/SST1/stsa.binary.all"
-    # path_extract_corpus = "/data/mszhang/ACL2017-Word2Vec/data/save_enwiki_20150112_text_context_ngram_allcorpus/enwiki_20150112_text_context_ngram_allcorpus_sorted/enwiki-20150112_text_context_ngram_allcorpus_stastic/enwiki-20150112_text_context_ngram_allcorpus_stastic.txt"
-    # path_extracted_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_Subj_statstic.txt"
+    path_extract_corpus = "/home/lzl/mszhang/data-enwiki/enwiki-20150112_text_context_ngram_allcorpus_stastic/enwiki-20150112_text_context_ngram_allcorpus_stastic.txt"
+    path_extracted_corpus = "/home/lzl/mszhang/suda_file0120/extracted_sentence_corpus_sorted/extracted_MR_statstic.txt"
 
     data_dict = read_data(path_data=path_data)
     extract_corpus(path_extract_corpus=path_extract_corpus, data_dict=data_dict, path_extracted_corpus=path_extracted_corpus)

@@ -186,19 +186,19 @@ if __name__ == "__main__":
     # path_featEmbedding = "./embedding/richfeat.enwiki.emb.feature.small"
     # path_Save_wordEmbedding = "./embedding/convert_subword_CR.txt"
 
-    path_data = "./Data/SST2/stsa.fine.all"
+    # path_data = "./Data/SST2/stsa.fine.all"
     # path_data = "./Data/TREC/TREC.all"
     # path_data = "./Data/MPQA/mpqa.all"
     # path_data = "./Data/SST1/stsa.binary.all"
-    # path_data = "./Data/CR/custrev.all"
+    path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
-    path_corpus = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/extracted_sentence_corpus/SST1/extracted_SST2_statstic_handled.txt"
-    path_featEmbedding = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/richfeat/enwiki.emb.feature"
-    path_Save_wordEmbedding = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/sentence_classification/enwiki.emb.feat_SST2.txt"
+    path_corpus = "/home/lzl/mszhang/suda_file0120/extracted_sentence_corpus_sorted/extracted_CR_statstic_handled_sorted.txt"
+    path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/enwiki.emb.feature"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/sentence_classification_richfeat/enwiki.emb.source_feat30_CR_1.txt"
 
     data_list = read_data(path_data=path_data)
-    corpus_dict = read_corpus_stastical_sorted(path_corpus=path_corpus, fileter_ratio=1.0)
+    corpus_dict = read_corpus_stastical_sorted(path_corpus=path_corpus, fileter_ratio=0.3)
     feat_embed_dict, feat_embed_dim = read_feat_embedding(path_featEmbedding=path_featEmbedding)
     handle_Embedding(data_list=data_list, corpus_dict=corpus_dict, feat_embedding_dict=feat_embed_dict,
                      embedding_dim=feat_embed_dim, path_Save_wordEmbedding=path_Save_wordEmbedding)

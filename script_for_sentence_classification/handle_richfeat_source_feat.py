@@ -189,7 +189,7 @@ def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=Non
                 feat_ngram_num = 1
             #  context n-gram
             word_context_vector, F_num, count_word = context_n_gram(word=word, corpus_dict=corpus_dict,
-                                                                    feat_embed_dict=feat_embed_dict)
+                                                                    feat_embed_dict=feat_embedding_dict)
             # calculate
             feat_ngram_num += 1
             feat_sum_embedding = np.divide(np.add(feat_sum_embedding, source_embedding), feat_ngram_num + F_num / count_word)
@@ -223,24 +223,24 @@ def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=Non
 
 
 if __name__ == "__main__":
-    path_data = "./Data/CR/custrev.all"
+    # path_data = "./Data/CR/custrev.all"
     # path_data = "./Data/MR/rt-polarity.all"
-    path_corpus = "./embedding/richfeat_enwiki-20150112_text_handled_stastic_sorted.small.txt"
-    path_sourceEmbedding = "./embedding/richfeat.enwiki.emb.source.small"
-    path_featEmbedding = "./embedding/richfeat.enwiki.emb.feature.small"
-    path_Save_wordEmbedding = "./embedding/convert_subword_CR.txt"
+    # path_corpus = "./embedding/richfeat_enwiki-20150112_text_handled_stastic_sorted.small.txt"
+    # path_sourceEmbedding = "./embedding/richfeat.enwiki.emb.source.small"
+    # path_featEmbedding = "./embedding/richfeat.enwiki.emb.feature.small"
+    # path_Save_wordEmbedding = "./embedding/convert_subword_CR.txt"
 
     # path_data = "./Data/SST2/stsa.fine.all"
     # path_data = "./Data/TREC/TREC.all"
     # path_data = "./Data/MPQA/mpqa.all"
     # path_data = "./Data/SST1/stsa.binary.all"
     # path_data = "./Data/CR/custrev.all"
-    # path_data = "./Data/MR/rt-polarity.all"
+    path_data = "./Data/MR/rt-polarity.all"
     # path_data = "./Data/Subj/subj.all"
-    # path_corpus = ""
-    # path_sourceEmbedding = "/home/lzl/mszhang/suda_file_0113/file/subword/enwiki.emb.feature"
-    # path_featEmbedding = "/home/lzl/mszhang/suda_file_0113/file/subword/enwiki.emb.feature"
-    # path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file_0113/file/context/sentence_classification/enwiki.emb.source_CR.txt"
+    path_corpus = "/home/lzl/mszhang/suda_file0120/extracted_sentence_corpus_sorted/extracted_MR_statstic_handled_sorted.txt"
+    path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/enwiki.emb.source"
+    path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/enwiki.emb.feature"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/sentence_classification_richfeat/enwiki.emb.source_feat_MR.txt"
 
     data_list = read_data(path_data=path_data)
     corpus_dict = read_corpus_stastical_sorted(path_corpus=path_corpus, fileter_ratio=0.3)
