@@ -105,10 +105,10 @@ def handle_feat(word, feat_vec):
                 # vector = np.array(vector) + np.array(list_float)
     vector = np.sum(vector_list, axis=0)
     if isinstance(vector, np.ndarray):
-        vector /= feat_num
-        return vector, feat_num
+        vector /= feat_count
+        return vector, feat_count
     else:
-        return vector, feat_num
+        return vector, feat_count
 
 
 def handle_feat_source(word, feat_vec):
@@ -125,7 +125,7 @@ def handle_feat_source(word, feat_vec):
                 feat_count += 1
                 list_float = [float(i) for i in feat_vec[feat.strip()]]
                 vector = np.array(vector) + np.array(list_float)
-    return vector, feat_num
+    return vector, feat_count
 
 
 def cal_error(sample_number, sample_k, word_vec, feat_vec, word_list):
@@ -160,11 +160,12 @@ def cal_error(sample_number, sample_k, word_vec, feat_vec, word_list):
 
 
 if __name__ == "__main__":
-    path_word_vector = "./enwiki.emb.source.small"
-    path_feat_vector = "./enwiki.emb.feature.small"
-    # path_word_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/subword/enwiki.emb.source"
-    # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-v0/subword/enwiki.emb.feature"
-    path_result = "./suda_error_result_subword.txt"
+    # path_word_vector = "./enwiki.emb.source.small"
+    # path_feat_vector = "./enwiki.emb.feature.small"
+    path_word_vector = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.source"
+    path_feat_vector = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.feature"
+    path_result = "./Error_result_subword0120_test_22.txt"
+
     word_list, word_vec, feat_vec = read_word_feat(path_word_vector=path_word_vector, path_feat_vector=path_feat_vector)
 
     if os.path.exists(path_result):

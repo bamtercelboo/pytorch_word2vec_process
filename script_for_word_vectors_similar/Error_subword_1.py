@@ -65,9 +65,8 @@ def word_n_gram(word=None, feat_embedding_dict=None):
 
 def handle_feat(word, feat_vec):
     feat_embedding, feat_count = word_n_gram(word=word, feat_embedding_dict=feat_vec)
-    feat_embedding_avg = 0
-    if isinstance(feat_embedding, np.ndarray):
-        feat_embedding_avg = np.divide(feat_embedding, feat_count)
+    feat_embedding_avg = np.divide(feat_embedding, feat_count)
+
     return feat_embedding_avg, feat_count
 
 
@@ -77,22 +76,19 @@ def handle_source_feat(word=None, source_embedding_dict=None, feat_embedding_dic
         source_embedding = np.array(source_embedding_list)
         feat_sum_embedding, feat_ngram_num = word_n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
         # word_embed = (feat_sum_embedding + source_embedding) / (1 + feat_ngram_num)
-        word_embed = np.divide(np.add(feat_sum_embedding, source_embedding), (1 + feat_ngram_num))
-        # return word_embed
+        word_embed = np.divide(np.add(feat_sum_embedding, source_embedding), np.add(1, feat_ngram_num))
+        return word_embed
     else:
         feat_sum_embedding, feat_ngram_num = word_n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
-        # if not isinstance(feat_sum_embedding, np.ndarray):
+        if not isinstance(feat_sum_embedding, np.ndarray):
             # if the word no n-gram in feature, replace with zero
-            # feat_sum_embedding = np.array(list([0] * 100))
-            # feat_ngram_num = 1
-        # feat_sum_embedding_avg = np.divide(feat_sum_embedding, feat_ngram_num)
-        word_embed = np.divide(feat_sum_embedding, feat_ngram_num)
-        # word_embed = feat_sum_embedding /feat_ngram_num
-        # return feat_sum_embedding_avg
-    return word_embed
+            feat_sum_embedding = np.array(list([0] * 100))
+            feat_ngram_num = 1
+        feat_sum_embedding_avg = np.divide(feat_sum_embedding, feat_ngram_num)
+        return feat_sum_embedding_avg
 
 
-def calculate_error(sample_number=None, sample_k=None, source_vec=None, feat_vec=None, source_list=None):
+def cal_error(sample_number=None, sample_k=None, source_vec=None, feat_vec=None, source_list=None):
     print("calculate error......")
     euclidean_avg = []
     for sample_num in range(sample_number):
@@ -115,15 +111,12 @@ def calculate_error(sample_number=None, sample_k=None, source_vec=None, feat_vec
 
 
 if __name__ == "__main__":
-    path_source_vector = "./Embedding/enwiki.emb.source_small"
-    path_feat_vector = "./Embedding/enwiki.emb.feature.small"
-    path_result = "./Error_result_subword0120.txt"
-    # path_source_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/subword/enwiki.emb.source"
-    # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/subword/enwiki.emb.feature"
-    # path_result = "./Error0126/Error_result_subword0120.txt"
-    # path_source_vector = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.source"
-    # path_feat_vector = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.feature"
-    # path_result = "./Error_result_subword0120_test_1.txt"
+    # path_source_vector = "./Embedding/enwiki.emb.source_small"
+    # path_feat_vector = "./Embedding/enwiki.emb.feature.small"
+    # path_result = "./Error_result_subword0120.txt"
+    path_source_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/parallel/enwiki.emb.source"
+    path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/parallel/enwiki.emb.feature"
+    path_result = "./Error0126/Error_result_parallel0120.txt"
     source_list, source_vec, feat_vec = read_source_feat(path_source_vector=path_source_vector, path_feat_vector=path_feat_vector)
 
     if os.path.exists(path_result):
@@ -135,7 +128,7 @@ if __name__ == "__main__":
     file.writelines(["sample_number", " ", "sample_k", " ", "error_avg", "\n"])
     for sample_k in list_sample_k:
         # list_sample_k_tqdm.set_description("Processing:")
-        error_avg = calculate_error(1000, int(sample_k), source_vec, feat_vec, source_list)
+        error_avg = cal_error(1000, int(sample_k), source_vec, feat_vec, source_list)
         file.writelines([str(1000), "    ", str(sample_k), "     ", str(error_avg.round(6)), "\n"])
         print("\nThe result is {}, {}, {}".format(1000, sample_k, error_avg.round(6)))
     file.close()

@@ -91,25 +91,30 @@ def cal_error(sample_number=None, sample_k=None, source_vec=None, feat_vec=None,
         sys.stdout.write("\rHandling with the {}/{} sample in {}".format(sample_num, sample_number, sample_k))
         sample_word_list = random.sample(source_list, sample_k)
         Euclidean = []
-        b = []
         for sample_word in sample_word_list:
             vec_feat, feat_num = handle_feat(sample_word, feat_vec)
             vec_sourcefeat = handle_source_feat(word=sample_word, source_embedding_dict=source_vec,
                                                 feat_embedding_dict=feat_vec)
-            euc = np.subtract(vec_feat, vec_sourcefeat) ** 2
-            Euclidean.append(euc.tolist())
-            b.append(np.sum(euc.tolist()))
+            # calculate
+            euc = np.subtract(vec_feat, vec_sourcefeat)
+            euc = np.square(euc)
+            euc = np.sum(euc)
+            Euclidean.append(euc)
         euclidean_avg.append(np.sum(Euclidean))
     error_avg = np.sum(euclidean_avg) / len(euclidean_avg)
     return error_avg
 
 
 if __name__ == "__main__":
-    path_source_vector = "./Embedding/enwiki.emb.source_small"
-    path_feat_vector = "./Embedding/enwiki.emb.feature.small"
+    # path_source_vector = "./Embedding/enwiki.emb.source_small"
+    # path_feat_vector = "./Embedding/enwiki.emb.feature.small"
+    # path_result = "./Error_result_subword0120.txt"
     # path_source_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/parallel/enwiki.emb.source"
     # path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/parallel/enwiki.emb.feature"
-    path_result = "./Error_result_parallel0120.txt"
+    # path_result = "./Error0126/Error_result_parallel0120.txt"
+    path_source_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/parallel/enwiki.emb.source"
+    path_feat_vector = "/data/mszhang/ACL2017-Word2Vec/experiments-final/for-liuzonglin/file0120/parallel/enwiki.emb.feature"
+    path_result = "./Error0126/Error_result_parallel0120.txt"
     source_list, source_vec, feat_vec = read_source_feat(path_source_vector=path_source_vector, path_feat_vector=path_feat_vector)
 
     if os.path.exists(path_result):
