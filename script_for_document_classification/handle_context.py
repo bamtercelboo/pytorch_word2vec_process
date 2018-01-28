@@ -111,9 +111,10 @@ if __name__ == "__main__":
     # path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
     # path_Save_wordEmbedding = "./embedding/converted_subword_MR.txt"
 
-    path_data = "./Data/IMDB/imdb_data_all.txt"
+    # path_data = "./Data/IMDB/imdb_data_all.txt"
+    path_data = "./Data/RT2k/rt2k_all.txt"
     path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/context/enwiki.emb.source"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/context/document_classification/enwiki.emb.source_IMDB.txt"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/context/document_classification/enwiki.emb.source_RT2k.txt"
 
     data_list = read_data(path_data=path_data)
     embedding_dict, embedding_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)

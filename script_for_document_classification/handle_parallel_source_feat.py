@@ -1,14 +1,15 @@
 # @Author : bamtercelboo
-# @Datetime : 2018/1/16 13:58
-# @File : handle_subword_source_feat.py
-# @Last Modify Time : 2018/1/16 13:58
+# @Datetime : 2018/1/20 15:22
+# @File : handle_parallel_source_feat_1.py
+# @Last Modify Time : 2018/1/20 15:22
 # @Contact : bamtercelboo@{gmail.com, 163.com}
 
 """
-    FILE :  handle_subword_source_feat.py
-    FUNCTION : iov use source and feature average
-               oov use feature average
+    FILE :  handle_parallel_source_feat_1.py
+    FUNCTION : iov --- source + feat
+               oov --- feat
 """
+
 
 import re
 import sys
@@ -58,7 +59,7 @@ def read_data(path_data=None):
 
 
 def read_source_embedding(path_sourceEmbedding=None):
-    print("read source embedding form {}".format(path_sourceEmbedding))
+    print("read source embedding from {}".format(path_sourceEmbedding))
     with open(path_sourceEmbedding, encoding="UTF-8") as f:
         source_embedding_dict = {}
         source_embedding_dim = 0
@@ -165,12 +166,12 @@ if __name__ == "__main__":
     # path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
     # path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
     # path_Save_wordEmbedding = "./embedding/convert_subword_IMDB.txt"
-
+    #
     # path_data = "./Data/IMDB/imdb_data_all.txt"
     path_data = "./Data/RT2k/rt2k_all.txt"
-    path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.feature"
-    path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.source"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/document_classification/enwiki.emb.source_feat_RT2k.txt"
+    path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/enwiki.emb.feature"
+    path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/enwiki.emb.source"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/parallel/document_classification/enwiki.emb.source_feat_RT2k.txt"
 
     data_list = read_data(path_data=path_data)
     source_embed_dict, source_embed_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)

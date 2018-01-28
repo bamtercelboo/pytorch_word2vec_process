@@ -149,13 +149,14 @@ def handle_Embedding(data_list=None, feat_embedding_dict=None, embedding_dim=0, 
 
 
 if __name__ == "__main__":
-    path_data = "./Data/IMDB/imdb_testall.txt"
-    path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
-    path_Save_wordEmbedding = "./embedding/convert_subword_IMDB.txt"
+    # path_data = "./Data/IMDB/imdb_testall.txt"
+    # path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
+    # path_Save_wordEmbedding = "./embedding/convert_subword_IMDB.txt"
 
     # path_data = "./Data/IMDB/imdb_data_all.txt"
-    # path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.feature"
-    # path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/document_classification/enwiki.emb.feat_IMDB.txt"
+    path_data = "./Data/RT2k/rt2k_all.txt"
+    path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.feature"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/document_classification/enwiki.emb.feat_RT2k.txt"
 
     data_list = read_data(path_data=path_data)
     feat_embed_dict, feat_embed_dim = read_feat_embedding(path_featEmbedding=path_featEmbedding)
