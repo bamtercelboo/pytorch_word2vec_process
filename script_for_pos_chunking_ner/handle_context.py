@@ -113,10 +113,10 @@ if __name__ == "__main__":
     # path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
     # path_Save_wordEmbedding = "./embedding/converted_subword_MR.txt"
 
-    # path_data = "./Data/conll2000/data_all.txt"
-    path_data = "./Data/conll2003_gold/conll2003_gold_all.txt"
+    path_data = "./Data/Conll2000_Chunking/conll2000_all.txt"
+    # path_data = "./Data/conll2003_gold/conll2003_gold_all.txt"
     path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/context/enwiki.emb.source"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/context/pos_chunking_ner/enwiki.emb.source_Conll2003.txt"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/context/pos_chunking_ner/enwiki.emb.source_Conll2000.txt"
 
     data_list = read_data(path_data=path_data)
     embedding_dict, embedding_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)

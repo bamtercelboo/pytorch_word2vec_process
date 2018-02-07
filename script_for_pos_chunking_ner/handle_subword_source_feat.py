@@ -151,9 +151,10 @@ def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_
             oov_num += 1
             feat_sum_embedding, feat_ngram_num = n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
             if not isinstance(feat_sum_embedding, np.ndarray):
+                continue
                 # if the word no n-gram in feature, replace with zero
-                feat_sum_embedding = np.array(list([0] * embedding_dim))
-                feat_ngram_num = 1
+                # feat_sum_embedding = np.array(list([0] * embedding_dim))
+                # feat_ngram_num = 1
             # feat_sum_embedding = feat_sum_embedding / feat_ngram_num
             feat_sum_embedding = np.divide(feat_sum_embedding, feat_ngram_num)
             write_embed(file=file, word=word, word_embed=feat_sum_embedding)
@@ -170,10 +171,11 @@ if __name__ == "__main__":
     # path_Save_wordEmbedding = "./embedding/convert_subword_IMDB.txt"
 
     # path_data = "./Data/conll2000/data_all.txt"
-    path_data = "./Data/conll2003_gold/conll2003_gold_all.txt"
+    # path_data = "./Data/conll2003_gold/conll2003_gold_all.txt"
+    path_data = "./Data/Conll2000_Chunking/conll2000_all.txt"
     path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.feature"
     path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/enwiki.emb.source"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/pos_chunking_ner/enwiki.emb.source_feat_Conll2003.txt"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/subword/pos_chunking_ner/enwiki.emb.source_feat_Conll2003_NoZero.txt"
 
     data_list = read_data(path_data=path_data)
     source_embed_dict, source_embed_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)

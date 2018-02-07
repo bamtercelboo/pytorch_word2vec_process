@@ -63,28 +63,6 @@ def read_data(path_data=None):
     return data
 
 
-def read_corpus_stastical_sorted(path_corpus=None, fileter_ratio=1.0):
-    print("Reading Corpus From {}".format(path_corpus))
-    word_dict = {}
-    with open(path_corpus, encoding="UTF-8") as f:
-        now_line = 0
-        for line in f:
-            now_line += 1
-            sys.stdout.write("\rHandling with the {} line".format(now_line))
-            line = line.strip().split(" ")
-            window_dict = {}
-            for i in range(0, len(line) - 2, 2):
-                # filter feature by sorted frequency
-                if i > (((len(line) - 2) / 2) * float(fileter_ratio)):
-                    break
-                window_dict[line[i + 2]] = int(line[i + 3])
-            window_dict["count"] = int(line[1])
-            word_dict[line[0]] = window_dict
-        f.close()
-    print("\nRead Corpus Finished.")
-    return word_dict
-
-
 def read_feat_embedding(path_featEmbedding=None):
     print("Reading Feature Embedding {}".format(path_featEmbedding))
     with open(path_featEmbedding, encoding="UTF-8") as f:
@@ -142,30 +120,6 @@ def word_n_gram(word=None, feat_embedding_dict=None):
     return feat_embedding, feat_count
 
 
-def context_n_gram(word=None, corpus_dict=None, feat_embed_dict=None):
-    # print("context n-gram")
-    word_context_vector = 0
-    F_num = 0
-    count_word = 1
-    # print(word)
-    word_context_vector_list = []
-    if word in corpus_dict:
-        count_word = corpus_dict[word]["count"]
-        # print("count_word", count_word)
-        for word_context_feat in corpus_dict[word]:
-            # print(word_win_feat)
-            if word_context_feat in feat_embed_dict:
-                count_context = corpus_dict[word][word_context_feat]
-                list_float = [float(i) for i in feat_embed_dict[word_context_feat.strip()]]
-                F_num += count_context
-                # print("count_win", count_win)
-                word_context_vector_list.append(int(count_context) * np.array(list_float))
-                # word_context_vector = np.array(word_context_vector) + int(count_context) * np.array(list_float)
-                # print(word_context_vector)
-    word_context_vector = np.sum(word_context_vector_list, axis=0)
-    return word_context_vector, F_num, count_word
-
-
 def write_embed(file=None, word=None, word_embed=None):
     file.write(word + " ")
     for vec in word_embed.tolist():
@@ -173,7 +127,7 @@ def write_embed(file=None, word=None, word_embed=None):
     file.write("\n")
 
 
-def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=None, feat_embedding_dict=None,
+def handle_Embedding(data_list=None, source_embedding_dict=None, feat_embedding_dict=None,
                      embedding_dim=0, path_Save_wordEmbedding=None):
     print("Handle Embedding......")
     print("Saving to {}".format(path_Save_wordEmbedding))
@@ -196,31 +150,15 @@ def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=Non
         else:
             oov_num += 1
             # word n-gram
-            word_context_flag, flag_n_gram = False, False
             feat_sum_embedding, feat_ngram_num = word_n_gram(word=word, feat_embedding_dict=feat_embedding_dict)
             if not isinstance(feat_sum_embedding, np.ndarray):
-                # if the word no n-gram in feature, replace with zero
-                flag_n_gram = True
-                # feat_sum_embedding = np.array(list([0] * embedding_dim))
-                # feat_ngram_num = 1
-            #  context n-gram
-            word_context_vector, F_num, count_word = context_n_gram(word=word, corpus_dict=corpus_dict,
-                                                                    feat_embed_dict=feat_embedding_dict)
-
-            if not isinstance(word_context_vector, np.ndarray):
-                word_context_flag = True
-
-            if word_context_flag is True and flag_n_gram is True:
                 continue
+
             # calculate
-            feat_sum_embedding = np.divide(feat_sum_embedding, feat_ngram_num + F_num / count_word)
-            word_context_vector = np.divide(word_context_vector, count_word * feat_ngram_num + F_num)
-            word_context_ngram_embed = np.add(feat_sum_embedding, word_context_vector)
-            # feat_sum_embedding = feat_sum_embedding / (feat_ngram_num + F_num / count_word)
-            # word_context_vector = word_context_vector / (count_word * feat_ngram_num + F_num)
-            # word_context_ngram_embed = feat_sum_embedding + word_context_vector
+            feat_sum_embedding = np.divide(feat_sum_embedding, feat_ngram_num)
+
             # write file
-            write_embed(file=file, word=word, word_embed=word_context_ngram_embed)
+            write_embed(file=file, word=word, word_embed=feat_sum_embedding)
     file.close()
     print("\niov number {} , oov number {}, all words {} == {}".format(iov_num, oov_num, (iov_num + oov_num),
                                                                        len(data_list)))
@@ -228,19 +166,22 @@ def handle_Embedding(data_list=None, corpus_dict=None, source_embedding_dict=Non
 
 
 if __name__ == "__main__":
-    # path_data = "./Data/conll2003_gold/conll2003_gold_all.txt"
+    path_data = "./Data/conll2003_gold/conll2003_gold_all.txt"
     # path_data = "./Data/conll2000/data_all.txt"
-    path_data = "./Data/Conll2000_Chunking/conll2000_all.txt"
-    path_corpus = "/home/lzl/mszhang/suda_file0120/extracted_sentence_corpus_sorted/extracted_Conll2003_statstic_handled_sorted.txt"
+    # path_featEmbedding = "./embedding/subword.enwiki.emb.feature.small"
+    # path_sourceEmbedding = "./embedding/subword.enwiki.emb.source.small"
+    # path_Save_wordEmbedding = "./embedding/convert_subword_IMDB.txt"
+
+    # path_data = "./Data/Conll2000_Chunking/conll2000_all.txt"
+    path_data = "./Data/conll2003_gold/conll2003_gold_all.txt"
     path_sourceEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/enwiki.emb.source"
     path_featEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/enwiki.emb.feature"
-    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/pos_chunking_ner/enwiki.emb.source_feat_Conll2003_1_NoZero.txt"
+    path_Save_wordEmbedding = "/home/lzl/mszhang/suda_file0120/file/file0120/richfeat/pos_chunking_ner/enwiki.emb.source_feat_word_ngram_Conll2003.txt"
 
     data_list = read_data(path_data=path_data)
-    corpus_dict = read_corpus_stastical_sorted(path_corpus=path_corpus, fileter_ratio=1.0)
     source_embed_dict, source_embed_dim = read_source_embedding(path_sourceEmbedding=path_sourceEmbedding)
     feat_embed_dict, feat_embed_dim = read_feat_embedding(path_featEmbedding=path_featEmbedding)
     assert source_embed_dim == feat_embed_dim
-    handle_Embedding(data_list=data_list, corpus_dict=corpus_dict, source_embedding_dict=source_embed_dict,
+    handle_Embedding(data_list=data_list, source_embedding_dict=source_embed_dict,
                      feat_embedding_dict=feat_embed_dict, embedding_dim=feat_embed_dim,
                      path_Save_wordEmbedding=path_Save_wordEmbedding)
