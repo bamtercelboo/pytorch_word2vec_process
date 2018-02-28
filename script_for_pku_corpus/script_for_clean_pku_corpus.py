@@ -31,6 +31,10 @@ def clean_pku_corpus(pku_corpus=None, pku_cleaned_corpus=None):
             if judge is True:
                 # print("judge", judge)
                 continue
+            # print(line)
+            line = line.replace("/", "_")
+            line = line.replace("_%", "")
+            # print(line)
             file_cleaned.writelines(line)
     file_cleaned.close()
     print("\nHandling PKU Corpus Finished.")
@@ -63,10 +67,84 @@ def strQ2B(ustring):
     return rstring
 
 
+def clean_pku_corpus_space(pku_cleaned_corpus_del=None, pku_cleaned_corpus_del_space=None):
+    if os.path.exists(pku_cleaned_corpus_del_space):
+        os.remove(pku_cleaned_corpus_del_space)
+    file = open(pku_cleaned_corpus_del_space, encoding="UTF-8", mode="w")
+    now_line = 0
+    with open(pku_cleaned_corpus_del, encoding="UTF-8") as f:
+        for line in f:
+            now_line += 1
+            sys.stdout.write("\rhandling with {} line.".format(now_line))
+            # print(line)
+            line = line.replace("  ", " ")
+            file.writelines(line)
+    print("Handle Finished.")
+    file.close()
+
+
+def clean_pku_corpus_space_gold(gold_corpus=None, none_gold_corpus=None):
+    if os.path.exists(none_gold_corpus):
+        os.remove(none_gold_corpus)
+    file = open(none_gold_corpus, encoding="UTF-8", mode="w")
+    now_line = 0
+    with open(gold_corpus, encoding="UTF-8") as f:
+        for line in f:
+            now_line += 1
+            sys.stdout.write("\rhandling with {} line.".format(now_line))
+            # print(line)
+            line = line.strip().split(" ")
+            none_gold_line = ""
+            for word in line:
+                word = word[:word.find("_")]
+                none_gold_line += word
+            print(none_gold_line)
+            file.writelines(none_gold_line + "\n")
+    file.close()
+    print("\nHandle Finished.")
+    file.close()
+
+
+def clean_pku_corpus_space_tag(corpus_dev_cleaned_del_space=None, corpus_dev_cleaned_del_space_tag=None):
+    if os.path.exists(corpus_dev_cleaned_del_space_tag):
+        os.remove(corpus_dev_cleaned_del_space_tag)
+    file = open(corpus_dev_cleaned_del_space_tag, encoding="UTF-8", mode="w")
+    now_line = 0
+    with open(corpus_dev_cleaned_del_space, encoding="UTF-8") as f:
+        for line in f:
+            now_line += 1
+            sys.stdout.write("\rhandling with {} line.".format(now_line))
+            # print(line)
+            line = line.strip().split(" ")
+            tag_line = ""
+            for word in line:
+                if word.find("_") == -1:
+                    continue
+                word += " "
+                tag_line += word
+            file.writelines(tag_line[:-1] + "\n")
+    file.close()
+    print("\nHandle Finished.")
+    file.close()
+
+
 if __name__ == "__main__":
     print("cleaning pku corpus")
-    pku_corpus = "./data/pku_corpus_spilit/863corpus_train.txt"
-    pku_cleaned_corpus = "./data/pku_corpus_spilit_cleaned/863corpus_train_cleaned.txt"
-    clean_pku_corpus(pku_corpus=pku_corpus, pku_cleaned_corpus=pku_cleaned_corpus)
+    # pku_corpus = "./data/pku_corpus_spilit/863corpus_train.txt"
+    # pku_cleaned_corpus = "./data/pku_corpus_spilit_cleaned/863corpus_train_cleaned.txt"
+    # clean_pku_corpus(pku_corpus=pku_corpus, pku_cleaned_corpus=pku_cleaned_corpus)
+
+    # pku_cleaned_corpus_del = "./data/pku_corpus_spilit_cleaned_del/863corpus_dev_cleaned_del.txt"
+    # pku_cleaned_corpus_del_space = "./data/pku_corpus_spilit_cleaned_del_space/863corpus_dev_cleaned_del_space.txt"
+    # clean_pku_corpus_space(pku_cleaned_corpus_del=pku_cleaned_corpus_del, pku_cleaned_corpus_del_space=pku_cleaned_corpus_del_space)
+
+    # gold_corpus = "./data/pku_corpus_spilit_cleaned_del_space/863corpus_dev_cleaned_del_space.txt"
+    # none_gold_corpus = "./data/pku_none_gold_corpus/863corpus_dev_cleaned_del_space_nonegold.txt"
+    # clean_pku_corpus_space_gold(gold_corpus=gold_corpus, none_gold_corpus=none_gold_corpus)
+
+    corpus_dev_cleaned_del_space = "./data/pku_corpus_spilit_cleaned_del_space/863corpus_dev_cleaned_del_space.txt"
+    corpus_dev_cleaned_del_space_tag = "./data/pku_corpus_spilit_cleaned_del_space_tag/863corpus_dev_cleaned_del_space_tag.txt"
+    clean_pku_corpus_space_tag(corpus_dev_cleaned_del_space=corpus_dev_cleaned_del_space,
+                               corpus_dev_cleaned_del_space_tag=corpus_dev_cleaned_del_space_tag)
 
 
