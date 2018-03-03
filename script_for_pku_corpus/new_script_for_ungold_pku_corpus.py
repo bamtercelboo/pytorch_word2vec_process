@@ -40,3 +40,4 @@ if __name__ == "__main__":
     gold_corpus = "./data/pku_corpus_cleaned_all/pku.split.train.863tag.cleaned.all.txt"
     none_gold_corpus = "./data/pku_corpus_cleaned_all_ungold/pku.split.train.863tag.cleaned.all.ungold.txt"
     clean_pku_corpus_space_gold(gold_corpus=gold_corpus, none_gold_corpus=none_gold_corpus)
+

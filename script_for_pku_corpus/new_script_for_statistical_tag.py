@@ -73,15 +73,15 @@ if __name__ == "__main__":
     print("statistical pos-tag")
     # corpus_file = "./data/pku_tag_cleaned/pku.test.a2b.tag.cleaned.txt"
     # save_file = "./data/pku_statistical_tag/pku.test.a2b.tag.cleaned.sta.txt"
-    # corpus_file = "./data/pku_tag_cleaned/pku.split.train.863tag.cleaned.txt"
-    # save_file = "./data/pku_statistical_tag/pku.split.train.863tag.cleaned.sta.txt"
-    # pos_tag, word_count = statistical_pos_tag(corpus_file=corpus_file)
-    # print(pos_tag, word_count)
-    # write(pos_tag=pos_tag, word_count=word_count, save_file=save_file, corpus_file=corpus_file)
+    corpus_file = "./data/pku_corpus_cleaned_all/pku.split.test.863tag.cleaned.all.txt"
+    save_file = "./data/pku_statistical_tag/pku.split.test.863tag.cleaned.all.sta.txt"
+    pos_tag, word_count = statistical_pos_tag(corpus_file=corpus_file)
+    print(pos_tag, word_count)
+    write(pos_tag=pos_tag, word_count=word_count, save_file=save_file, corpus_file=corpus_file)
 
-    data = "./data/pku_statistical_tag/pku_tag_all.txt"
-    save_all_tag = "./data/pku_statistical_tag/pku_tag_all_set.txt"
-    merge_tag(data=data, save_all_tag=save_all_tag)
+    # data = "./data/pku_statistical_tag/pku_tag_all.txt"
+    # save_all_tag = "./data/pku_statistical_tag/pku_tag_all_set.txt"
+    # merge_tag(data=data, save_all_tag=save_all_tag)
 
 
 
